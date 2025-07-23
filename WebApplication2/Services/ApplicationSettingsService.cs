@@ -1,105 +1,100 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using WebApplication2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Services
 {
     public class ApplicationSettingsService
     {
-        public ApplicationSettingsService()
+        private readonly AppDbContext _db;
+
+        public ApplicationSettingsService(AppDbContext db)
         {
+            _db = db;
         }
-
-        private List<SettingClass> _languageList = new List<SettingClass> {
-            new() { Id = 1, Value = "en", DisplayValue="s:english"},
-            new() { Id = 2, Value = "slo", DisplayValue="s:slovenian"},
-        };
-
-        private List<SettingClass> _dateTimeFormatList = new List<SettingClass> {
-            new() { Id = 1, Value = "dd/mm/yyyy", DisplayValue="dd/mm/yyyy" },
-            new() { Id = 2, Value = "mm/dd/yyyy", DisplayValue="mm/dd/yyyy"  },
-        };
-
-        private List<SettingClass> _decimalSeperatorList = new List<SettingClass> {
-            new() { Id = 1, Value = "." , DisplayValue = "s:dot"},
-            new() { Id = 2, Value = "," , DisplayValue = "s:comma"},
-        };
-
-        private List<ApplicationSettingsClass> applicationSettings = new List<ApplicationSettingsClass>
-        {
-            new() {
-                Id = 1,
-                IsSystem = true,
-                LanguageId = 1,
-                DecimalSeperatorId = 1,
-                DateTimeFormatId = 1,
-            }
-        };
 
         public ApplicationSettingsClass GetApplicationSettings()
         {
-            return applicationSettings.Find(appS => appS.IsSystem == true);
+            return _db.ApplicationSettings
+                .Include(s => s.Language)
+                .Include(s => s.DateTimeFormat)
+                .Include(s => s.DecimalSeparator)
+                .FirstOrDefault(appS => appS.System == true);
         }
 
         public List<ApplicationSettingsClass> GetAllSettings()
         {
-            return applicationSettings;
+            return _db.ApplicationSettings
+                .Include(s => s.Language)
+                .Include(s => s.DateTimeFormat)
+                .Include(s => s.DecimalSeparator)
+                .ToList();
         }
 
-        public int SetApplicationSettings(EditApplicationSettingsClass settings) {
+        public int SetApplicationSettings(EditApplicationSettingsClass settings)
+        {
+            // Validate existence of related settings
+            if (settings.LanguageId != null &&
+                !_db.Languages.Any(l => l.Id == settings.LanguageId))
+                return -1;
 
-            if (settings.Id != null && applicationSettings.Find(a => a.Id == settings.Id).IsSystem == true)
+            if (settings.DateTimeFormatId != null &&
+                !_db.DateTimeFormats.Any(f => f.Id == settings.DateTimeFormatId))
+                return -1;
+
+            if (settings.DecimalSeperatorId != null &&
+                !_db.DecimalSeparators.Any(d => d.Id == settings.DecimalSeperatorId))
+                return -1;
+
+            // If ID provided and matches a system config, edit it
+            var editSettings = settings.Id != null
+                ? _db.ApplicationSettings.FirstOrDefault(a => a.Id == settings.Id)
+                : null;
+
+            if (editSettings != null && editSettings.System == true)
             {
                 if (settings.LanguageId == null || settings.DateTimeFormatId == null || settings.DecimalSeperatorId == null)
-                {
                     return -1;
-                }
             }
 
-            if(settings.LanguageId != null)
+            if (editSettings == null)
             {
-                if (!_languageList.Select(l => l.Id).ToList().Contains((int)settings.LanguageId))
+                editSettings = new ApplicationSettingsClass
                 {
-                    return -1;
-                }
+                    System = false,
+                    Use_Strong_Password = settings.UseStrongPassword,
+                    ID_language = settings.LanguageId,
+                    ID_date_time_format = settings.DateTimeFormatId,
+                    ID_separator = settings.DecimalSeperatorId
+                };
+                _db.ApplicationSettings.Add(editSettings);
             }
-            if (settings.DateTimeFormatId != null)
+            else
             {
-                if (!_dateTimeFormatList.Select(l => l.Id).ToList().Contains((int)settings.DateTimeFormatId))
-                {
-                    return -1;
-                }
-            }
-            if (settings.DecimalSeperatorId != null)
-            {
-                if (!_decimalSeperatorList.Select(l => l.Id).ToList().Contains((int)settings.DecimalSeperatorId))
-                {
-                    return -1;
-                }
-            }
-            var editSettings = applicationSettings.Find(appS => appS.Id == settings.Id);
-
-            if (editSettings == null) {
-                editSettings = new ApplicationSettingsClass { Id = applicationSettings.Last().Id + 1 };
-                applicationSettings.Add(editSettings);
+                editSettings.Use_Strong_Password = settings.UseStrongPassword;
+                editSettings.ID_language = settings.LanguageId;
+                editSettings.ID_date_time_format = settings.DateTimeFormatId;
+                editSettings.ID_separator = settings.DecimalSeperatorId;
             }
 
-            editSettings.LanguageId = settings.LanguageId;
-            editSettings.DecimalSeperatorId = settings.DecimalSeperatorId;
-            editSettings.DateTimeFormatId = settings.DateTimeFormatId;
-
+            _db.SaveChanges();
             return editSettings.Id;
         }
 
-        public List<SettingClass> GetLanguages() {
-            return _languageList;
+        public List<LanguageSetting> GetLanguages()
+        {
+            return _db.Languages.ToList();
         }
 
-        public List<SettingClass> GetDateTimeFormats() {
-            return _dateTimeFormatList;
+        public List<DateTimeFormatSetting> GetDateTimeFormats()
+        {
+            return _db.DateTimeFormats.ToList();
         }
 
-        public List<SettingClass> GetDecimalSeperators() {
-            return _decimalSeperatorList;
+        public List<DecimalSeparatorSetting> GetDecimalSeparators()
+        {
+            return _db.DecimalSeparators.ToList();
         }
     }
 }

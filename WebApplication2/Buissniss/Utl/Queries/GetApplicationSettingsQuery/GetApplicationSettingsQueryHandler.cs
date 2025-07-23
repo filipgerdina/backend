@@ -21,9 +21,9 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetApplicationSettingsQuery
             var appSettings = _applicationSettingsService.GetApplicationSettings();
             result.Data = new GetApplicationSettingsQueryDTO()
             {
-                Language = _applicationSettingsService.GetLanguages().Select(l => new SettingsDTO { Id=l.Id, DisplayValue=l.DisplayValue, Value=l.Value}).ToList().Find(u => u.Id == appSettings.LanguageId),
-                DateFormat = _applicationSettingsService.GetDateTimeFormats().Select(df => new SettingsDTO { Id = df.Id, DisplayValue = df.DisplayValue, Value = df.Value }).ToList().Find(u => u.Id == appSettings.DateTimeFormatId),
-                DecimalSeperator = _applicationSettingsService.GetDecimalSeperators().Select(ds => new SettingsDTO { Id = ds.Id, DisplayValue = ds.DisplayValue, Value = ds.Value }).ToList().Find(u => u.Id == appSettings.DecimalSeperatorId),
+                Language = _applicationSettingsService.GetLanguages().Select(l => new SettingsDTO { Id=l.Id, DisplayValue=l.Display_Value, Value=l.Value}).ToList().Find(u => u.Id == appSettings.ID_language),
+                DateFormat = _applicationSettingsService.GetDateTimeFormats().Select(df => new SettingsDTO { Id = df.Id, DisplayValue = df.Display_Value, Value = df.Value }).ToList().Find(u => u.Id == appSettings.ID_date_time_format),
+                DecimalSeperator = _applicationSettingsService.GetDecimalSeparators().Select(ds => new SettingsDTO { Id = ds.Id, DisplayValue = ds.Display_Value, Value = ds.Value }).ToList().Find(u => u.Id == appSettings.ID_separator),
             };
             return result;
         }

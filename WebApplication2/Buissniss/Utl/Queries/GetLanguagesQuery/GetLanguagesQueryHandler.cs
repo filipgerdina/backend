@@ -26,7 +26,7 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetLanguagesQuery
             {
                 Id = u.Id,
                 Value = u.Value,
-                DisplayName = u.DisplayValue
+                DisplayName = u.Display_Value
             }).ToList();
             return result;
         }

@@ -23,7 +23,7 @@ namespace WebApplication2.Business.User.Commands.SyncDomainUsersCommand
             var form = new ActionFormQueryDTO
             {
                 Id = UserTableActions.SYNC_DOMAIN_USERS,
-                Title = "s:syncDomainUsers",
+                Title = "s:importUsersFromDomain",
                 Controls = new List<ActionFormControl>
                 {
                     new ActionFormControl
@@ -53,7 +53,7 @@ namespace WebApplication2.Business.User.Commands.SyncDomainUsersCommand
                         ValueDataType = "STRING",
                         ValueType = "SIMPLE",
                         Label = domainLabel,
-                        Required = false,
+                        Required = true,
                         VisualizationType = VisualizationType.Textbox
                     },
                 },

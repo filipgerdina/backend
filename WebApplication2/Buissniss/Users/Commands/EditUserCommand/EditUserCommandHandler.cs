@@ -29,7 +29,10 @@ namespace WebApplication2.Business.User.Commands.EditUserCommand
             var userId = userService.EditUser(user);
 
             if(userId == -1)
-                throw new BaseException(UserApplicationMessages.USERNAME_NOT_UNIQUE);
+            {
+                response.AddMessage(new BaseException(UserApplicationMessages.USERNAME_NOT_UNIQUE));
+                return response;
+            }
 
             response.SetId(userId);
             return response;

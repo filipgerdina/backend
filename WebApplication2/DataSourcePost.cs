@@ -10,6 +10,16 @@ namespace WebApplication2
         public JsonElement BodyParams { get; set; }
     }
 
+
+    public class ProcessEndPointActionPost
+    {
+        public string Name { get; set; }
+        public string Method { get; set; }
+        public JsonElement UrlParams { get; set; }
+        public JsonElement QueryParams { get; set; }
+        public JsonElement BodyParams { get; set; }
+    }
+
     //public class UrlParams : Params { }
 
     //public class QueryParams : Params { }

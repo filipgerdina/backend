@@ -24,7 +24,7 @@ namespace WebApplication2.Buissniss.Roles.Queries.GetRolesQuery
             { 
                 Id = u.Id,
                 Name = u.Name,
-                DefaultPage = _pagesService.GetPages().ToList().FindAll(p => p.Id == u.DefaultPageId).Count != 0 ? _pagesService.GetPages().ToList().FindAll(p => p.Id == u.DefaultPageId).Select(p => p.Name).First() : null,
+                DefaultPage = _pagesService.GetPages().ToList().FindAll(p => p.Id == u.ID_home_page).Count != 0 ? _pagesService.GetPages().ToList().FindAll(p => p.Id == u.ID_home_page).Select(p => p.Name).First() : null,
             }).ToList();
 
             return result;

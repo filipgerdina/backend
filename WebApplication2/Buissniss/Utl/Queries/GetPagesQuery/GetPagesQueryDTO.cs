@@ -10,7 +10,7 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetPagesQuery
         public string PageComponent { get; set; }
         public string Name { get; set; }
         public string IconUrl { get; set; }
-        public ModuleClass Module { get; set; }
-        public NavigationGroupClass NavigationGroup { get; set; }
+        public int? ModuleId { get; set; }
+        public int? NavigationGroupId { get; set; }
     }
 }

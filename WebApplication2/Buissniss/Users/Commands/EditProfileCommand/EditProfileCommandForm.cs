@@ -67,19 +67,19 @@ namespace WebApplication2.Business.User.Commands.EditProfileCommand
                         },
                         VisualizationType = VisualizationType.Textbox
                     },
-                    new ActionFormControl
-                    {
-                        DataField = domainUsernameField,
-                        ValueDataType = "STRING",
-                        ValueType = "SIMPLE",
-                        Label = domainUsernameLabel,
-                        Required = true,
-                        Properties = new TextboxProperties
-                        {
-                            ReadOnly = true
-                        },
-                        VisualizationType = VisualizationType.Textbox
-                    },
+                    //new ActionFormControl
+                    //{
+                    //    DataField = domainUsernameField,
+                    //    ValueDataType = "STRING",
+                    //    ValueType = "SIMPLE",
+                    //    Label = domainUsernameLabel,
+                    //    Required = true,
+                    //    Properties = new TextboxProperties
+                    //    {
+                    //        ReadOnly = true
+                    //    },
+                    //    VisualizationType = VisualizationType.Textbox
+                    //},
                     new ActionFormControl
                     {
                         DataField = emailField,
@@ -136,12 +136,15 @@ namespace WebApplication2.Business.User.Commands.EditProfileCommand
                         Label = languageIdLabel,
                         Required = false,
                         VisualizationType = VisualizationType.Dropdown,
-                        Description = appSettingsService.GetLanguages().Find(l => l.Id == appSettingsService.GetApplicationSettings().LanguageId).DisplayValue,
+                        Description = appSettingsService.GetLanguages().Find(l => l.Id == appSettingsService.GetApplicationSettings().ID_language).Display_Value,
                         Properties = new DropdownProperties
                         {
                             DisplayDataField = "displayValue",
                             ValueDataField = "id",
-                            Values = appSettingsService.GetLanguages().ToList().Select(dd => (object)dd).ToList(),
+                            Values = appSettingsService.GetLanguages()
+                                .Select(l => new { Id = l.Id, DisplayValue = l.Display_Value, Value = l.Value })
+                                .Cast<object>()
+                                .ToList(),
                         },
 
                     },
@@ -153,12 +156,15 @@ namespace WebApplication2.Business.User.Commands.EditProfileCommand
                         Label = dateTimeFormatIdLabel,
                         Required = false,
                         VisualizationType = VisualizationType.Dropdown,
-                        Description = appSettingsService.GetDateTimeFormats().Find(l => l.Id == appSettingsService.GetApplicationSettings().DateTimeFormatId).DisplayValue,
+                        Description = appSettingsService.GetDateTimeFormats().Find(l => l.Id == appSettingsService.GetApplicationSettings().ID_date_time_format).Display_Value,
                         Properties = new DropdownProperties
                         {
                             DisplayDataField = "displayValue",
                             ValueDataField = "id",
-                            Values = appSettingsService.GetDateTimeFormats().ToList().Select(dd => (object)dd).ToList(),
+                            Values = appSettingsService.GetDateTimeFormats()
+                                .Select(l => new { Id = l.Id, DisplayValue = l.Display_Value, Value = l.Value })
+                                .Cast<object>()
+                                .ToList(),
                         },
 
                     },
@@ -170,12 +176,15 @@ namespace WebApplication2.Business.User.Commands.EditProfileCommand
                         Label = decimalSeperatorIdLabel,
                         Required = false,
                         VisualizationType = VisualizationType.Dropdown,
-                        Description = appSettingsService.GetDecimalSeperators().Find(l => l.Id == appSettingsService.GetApplicationSettings().DecimalSeperatorId).DisplayValue,
+                        Description = appSettingsService.GetDecimalSeparators().Find(l => l.Id == appSettingsService.GetApplicationSettings().ID_separator).Display_Value,
                         Properties = new DropdownProperties
                         {
                             DisplayDataField = "displayValue",
                             ValueDataField = "id",
-                            Values = appSettingsService.GetDecimalSeperators().ToList().Select(dd => (object)dd).ToList(),
+                            Values = appSettingsService.GetDecimalSeparators()
+                                .Select(l => new { Id = l.Id, DisplayValue = l.Display_Value, Value = l.Value })
+                                .Cast<object>()
+                                .ToList(),
                         },
 
                     },
@@ -186,21 +195,21 @@ namespace WebApplication2.Business.User.Commands.EditProfileCommand
                         usernameField,
                         userClass.Username ?? null
                     },
-                    {
-                        domainUsernameField,
-                        (userClass is DomainUserClass) ? ((DomainUserClass)userClass).Domain + "/" + userClass.Username : null
-                    },
+                    //{
+                    //    domainUsernameField,
+                    //    (userClass is DomainUserClass) ? ((DomainUserClass)userClass).Domain + "/" + userClass.Username : null
+                    //},
                     {
                         emailField,
                         userClass.Email ?? null
                     },
                     {
                         firstNameField,
-                        userClass.FirstName ?? null
+                        userClass.First_Name ?? null
                     },
                     {
                         lastNameField,
-                        userClass.LastName ?? null
+                        userClass.Last_Name ?? null
                     },
                     {
                         defaultPageIdField,
@@ -208,15 +217,15 @@ namespace WebApplication2.Business.User.Commands.EditProfileCommand
                     },
                     {
                         languageIdField,
-                        appSettingsService.GetAllSettings().Find(a => a.Id == userClass.SettingsId)?.LanguageId ?? null
+                        appSettingsService.GetAllSettings().Find(a => a.Id == userClass.ID_Setting)?.ID_language ?? null
                     },
                     {
                         dateTimeFormatIdField,
-                        appSettingsService.GetAllSettings().Find(a => a.Id == userClass.SettingsId)?.DateTimeFormatId ?? null
+                        appSettingsService.GetAllSettings().Find(a => a.Id == userClass.ID_Setting)?.ID_date_time_format ?? null
                     },
                     {
                         decimalSeperatorIdField,
-                        appSettingsService.GetAllSettings().Find(a => a.Id == userClass.SettingsId)?.DecimalSeperatorId ?? null
+                        appSettingsService.GetAllSettings().Find(a => a.Id == userClass.ID_Setting)?.ID_separator ?? null
                     },
                 },
             };

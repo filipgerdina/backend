@@ -23,7 +23,7 @@ namespace WebApplication2.Buissniss.Roles.Queries.GetNavigationGroupPermissionsO
             result.Data = _navigationGroupPermissionsService.GetRolesNavigationGroupPermissions(request.RoleId).Select(pp => new GetNavigationGroupPermissionsOfRoleQueryDTO()
             {
                 Id = (int)pp.Id,
-                Name = _navigationGroupService.GetNavigationGroups().ToList().Find(p => p.Id == pp.NavigationGroupId).Name,
+                Name = _navigationGroupService.GetNavigationGroups().ToList().Find(p => p.Id == pp.ID_navigation_group).Name,
             }).ToList();
 
             return result;

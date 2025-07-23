@@ -34,20 +34,23 @@ namespace WebApplication2.Controllers
             var user = _userService.GetUsers()
                 .FirstOrDefault(u => u.Username.Equals(request.Username, StringComparison.OrdinalIgnoreCase));
 
-            if (user == null || user.IsLocked)
-                return Unauthorized(new { message = "Invalid username or password" });
+            if (user == null)
+                return Unauthorized(new { message = "s:invalidCredentials" });
+
+            if (user.Is_Locked)
+                return Unauthorized(new { message = "s:accountIsLocked" });
 
             if (_userService.IsDomain(request.Username))
             {
                 var domain = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().DomainName;
                 var authenticated = await LdapDomainAuthenticator.AuthenticateAsync(request.Username, request.Password, domain);
                 if (!authenticated)
-                    return Unauthorized(new { message = "Invalid username or password" });
+                    return Unauthorized(new { message = "s:invalidCredentials" });
             }
             else
             {
                 if (_userService.Authenticate(request.Username, request.Password) == null)
-                    return Unauthorized(new { message = "Invalid username or password" });
+                    return Unauthorized(new { message = "s:invalidCredentials" });
             }
 
             var accessToken = _tokenGenerator.GenerateAccessToken(user);
@@ -71,7 +74,8 @@ namespace WebApplication2.Controllers
                 Roles = _userService.GetActiveUserRoles(user.Id).Select(r => r.Name).ToList(),
                 Username = user.Username,
                 HomePage = _userService.GetUserDefaultPage(user.Id).Path,
-                LanguageId = _userService.GetSettings(user.Id).LanguageId
+                IsDomainUser = _userService.IsDomain(request.Username),
+                LanguageId = _userService.GetSettings(user.Id)?.ID_language
             });
         }
 
@@ -108,7 +112,8 @@ namespace WebApplication2.Controllers
                 Roles = _userService.GetActiveUserRoles(user.Id).Select(r => r.Name).ToList(),
                 Username = user.Username,
                 HomePage = _userService.GetUserDefaultPage(user.Id).Path,
-                LanguageId = _userService.GetSettings(user.Id).LanguageId
+                IsDomainUser = _userService.IsDomain(user.Username),
+                LanguageId = _userService.GetSettings(user.Id).ID_language
             });
         }
 
@@ -147,6 +152,7 @@ namespace WebApplication2.Controllers
         public List<string> Roles { get; set; }
         public string Username { get; set; }
         public string HomePage { get; set; }
+        public bool IsDomainUser { get; set; }
         public int? LanguageId { get; set; }
     }
 

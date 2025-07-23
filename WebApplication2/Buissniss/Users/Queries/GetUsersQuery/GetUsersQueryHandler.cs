@@ -22,12 +22,12 @@ namespace WebApplication2.Buissniss.User.Queries.GetUsersQuery
                 Id = u.Id,
                 Username = u.Username,
                 Added = u.Added,
-                DisplayName = u.DisplayName,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
+                DisplayName = u.First_Name != null && u.Last_Name != null ? u.First_Name + " " + u.Last_Name : null,
+                FirstName = u.First_Name,
+                LastName = u.Last_Name,
                 Email = u.Email,
-                IsLocked = u.IsLocked,
-                IsSystem = u.IsSystem,
+                IsLocked = u.Is_Locked,
+                IsSystem = u.Is_System,
                 Domain = (u is DomainUserClass) ? (u as DomainUserClass).Domain : null
             }).ToList();
 

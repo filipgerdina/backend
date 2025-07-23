@@ -45,17 +45,17 @@ public class GetUserInformationQueryHandler : IRequestHandler<GetUserInformation
             .Select(u => new GetUserInformationQueryDTO
             {
                 Username = u.Username,
-                DisplayName = u.FirstName != null || u.LastName != null ? u.FirstName + " " + u.LastName : u.DisplayName,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
+                DisplayName = u.First_Name != null || u.Last_Name != null ? u.First_Name + " " + u.Last_Name : u.Display_Name,
+                FirstName = u.First_Name,
+                LastName = u.Last_Name,
                 DomainUserName = (u is DomainUserClass) ? ((DomainUserClass)u).Domain + "/" + u.Username : null,
                 Email = u.Email,
                 Added = u.Added,
                 RoleNames = _usersService.GetActiveUserRoles(u.Id).Select(r => r.Name).ToList(),
                 DefaultPagePath = _usersService.GetUserDefaultPage(u.Id) != null ? _usersService.GetUserDefaultPage(u.Id).Path : null,
-                LanguageId = _appSettingsService.GetAllSettings().Find(a => a.Id == u.SettingsId)?.LanguageId ?? null,
-                DateTimeFormatId = _appSettingsService.GetAllSettings().Find(a => a.Id == u.SettingsId)?.DateTimeFormatId ?? null,
-                DecimalSeperatorId = _appSettingsService.GetAllSettings().Find(a => a.Id == u.SettingsId)?.DecimalSeperatorId ?? null,
+                LanguageId = _appSettingsService.GetAllSettings().Find(a => a.Id == u.ID_Setting)?.ID_language ?? null,
+                DateTimeFormatId = _appSettingsService.GetAllSettings().Find(a => a.Id == u.ID_Setting)?.ID_date_time_format ?? null,
+                DecimalSeperatorId = _appSettingsService.GetAllSettings().Find(a => a.Id == u.ID_Setting)?.ID_separator ?? null,
             })
             .FirstOrDefault();
 

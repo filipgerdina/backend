@@ -1,29 +1,29 @@
 ﻿using WebApplication2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Services
 {
     public class ModuleService
     {
+        private readonly AppDbContext _db;
+
+        public ModuleService(AppDbContext db)
+        {
+            _db = db;
+        }
+
         public IEnumerable<ModuleClass> GetModules()
         {
-            return new List<ModuleClass>
-            {
-                new() {
-                    Id = 1,
-                    PathToModue = "/userManagement/assets/remoteEntry.js",
-                    ModuleName = "userManagement",
-                },
-                new() {
-                    Id = 2,
-                    PathToModue = "/rolesManagement/assets/remoteEntry.js",
-                    ModuleName = "rolesManagement",
-                },
-                new() {
-                    Id = 3,
-                    PathToModue = "/permissionsManagement/assets/remoteEntry.js",
-                    ModuleName = "permissionsManagement",
-                },
-            };
+            return _db.Modules
+                      .AsNoTracking()
+                      .ToList();
+        }
+
+        public ModuleClass? GetModuleById(int id)
+        {
+            return _db.Modules
+                      .AsNoTracking()
+                      .FirstOrDefault(m => m.Id == id);
         }
     }
 }

@@ -23,7 +23,10 @@ namespace WebApplication2.Business.Roles.Commands.RemoveNavigationGroupPerrmissi
             var permissionId = navigationGroupPermissionsService.RemoveNavigationGroupPermission(request.Data.GetId());
 
             if (permissionId == -1)
-                throw new BaseException(UserApplicationMessages.MAPPING_EXISTS);
+            {
+                response.AddMessage(new BaseException(UserApplicationMessages.MAPPING_EXISTS));
+                return response;
+            }
 
             response.SetId(permissionId);
             return response;

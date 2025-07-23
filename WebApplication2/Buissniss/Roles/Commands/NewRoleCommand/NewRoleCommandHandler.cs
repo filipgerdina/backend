@@ -30,7 +30,10 @@ namespace WebApplication2.Business.Roles.Commands.AddRoleCommand
             var roleId = roleService.AddRole(roleClass);
 
             if (roleId == -1)
-                throw new BaseException(UserApplicationMessages.ROLE_NAME_NOT_UNIQUE);
+            {
+                response.AddMessage(new BaseException(UserApplicationMessages.ROLE_NAME_NOT_UNIQUE));
+                return response;
+            }
 
             response.SetId(roleId);
             return response;

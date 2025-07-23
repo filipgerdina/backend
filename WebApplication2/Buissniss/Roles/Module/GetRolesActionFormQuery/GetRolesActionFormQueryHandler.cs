@@ -20,13 +20,17 @@ namespace WebApplication2.Roles.Module.GetRolesActionsFormQuery
         private readonly RoleService roleService;
         private readonly PagesService pagesService;
         private readonly PagePermissionsService pagePermissionsService;
+        private readonly NavigationGroupService navigationGroupService;
+        private readonly NavigationGroupPermissionsService navigationGroupPermissionsService;
 
-        public GetRolesActionFormQueryHandler(UserService userService, RoleService roleService, PagesService pagesService, PagePermissionsService pagePermissionsService)
+        public GetRolesActionFormQueryHandler(UserService userService, RoleService roleService, PagesService pagesService, PagePermissionsService pagePermissionsService, NavigationGroupService navigationGroupService, NavigationGroupPermissionsService navigationGroupPermissionsService)
         {
             this.userService = userService;
             this.roleService = roleService;
             this.pagesService = pagesService;
             this.pagePermissionsService = pagePermissionsService;
+            this.navigationGroupService = navigationGroupService;
+            this.navigationGroupPermissionsService = navigationGroupPermissionsService;
         }
 
         public async Task<CoreResponse<ActionFormQueryDTO>> Handle(GetRolesActionFormQuery request, CancellationToken cancellationToken)
@@ -36,7 +40,7 @@ namespace WebApplication2.Roles.Module.GetRolesActionsFormQuery
 
             if (request.Data.FormCode == UserTableActions.EDIT_ROLE)
             {
-                obj = await EditRoleCommandForm.GetEditRoleForm(request.Data, roleService, pagesService, pagePermissionsService, cancellationToken);
+                obj = await EditRoleCommandForm.GetEditRoleForm(request.Data, roleService, pagesService, pagePermissionsService, navigationGroupService, navigationGroupPermissionsService, cancellationToken);
             }
 
             result.Data = obj;

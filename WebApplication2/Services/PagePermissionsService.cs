@@ -1,63 +1,62 @@
-﻿using WebApplication2.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WebApplication2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Services
 {
     public class PagePermissionsService
     {
+        private readonly AppDbContext _db;
 
-        private List<PagePermissionClass> pagePermissions = new List<PagePermissionClass>() {
-            new() {
-                Id = 1,
-                RoleId = 1,
-                PageId = 1,
-            },
-            new() {
-                Id = 2,
-                RoleId = 1,
-                PageId = 2,
-            },
-            new() {
-                Id = 3,
-                RoleId = 1,
-                PageId = 3,
-            },
-            new() {
-                Id = 4,
-                RoleId = 2,
-                PageId = 3,
-            }
-        };
+        public PagePermissionsService(AppDbContext db)
+        {
+            _db = db;
+        }
+
         public PagePermissionClass GetPagePermission(int id)
         {
-            return pagePermissions.Find(p => p.Id == id);
+            return _db.PagePermissions.FirstOrDefault(p => p.Id == id);
         }
 
         public List<PagePermissionClass> GetPagePermissions()
         {
-            return pagePermissions;
+            return _db.PagePermissions.ToList();
         }
 
-        public IEnumerable<PagePermissionClass> GetRolesPagePermissions(int roleId) { 
-            return pagePermissions.FindAll(p => p.RoleId == roleId);
+        public IEnumerable<PagePermissionClass> GetRolesPagePermissions(int roleId)
+        {
+            return _db.PagePermissions
+                      .Where(p => p.ID_role == roleId)
+                      .ToList();
         }
 
         public int AddPagePermission(PagePermissionClass pagePermission)
         {
-            if (pagePermissions.Any(p => p.RoleId == pagePermission.RoleId && p.PageId == pagePermission.PageId))
+            var exists = _db.PagePermissions
+                            .Any(p => p.ID_role == pagePermission.ID_role &&
+                                      p.ID_page == pagePermission.ID_page);
+            if (exists)
                 return -1;
-            pagePermission.Id = pagePermissions.Last().Id + 1;
-            pagePermissions.Add(pagePermission);
-            return (int)pagePermission.Id;
+
+            _db.PagePermissions.Add(pagePermission);
+            _db.SaveChanges();
+
+            return pagePermission.Id;
         }
 
-        public int RemovePagePermission(int permissionId) {
-            var pagePermission = GetPagePermission(permissionId);
+        public int RemovePagePermission(int permissionId)
+        {
+            var pagePermission = _db.PagePermissions
+                                    .FirstOrDefault(p => p.Id == permissionId);
 
             if (pagePermission == null)
                 return -1;
 
-            pagePermissions.Remove(pagePermission);
-            return (int)pagePermission.Id;
+            _db.PagePermissions.Remove(pagePermission);
+            _db.SaveChanges();
+
+            return pagePermission.Id;
         }
     }
 }

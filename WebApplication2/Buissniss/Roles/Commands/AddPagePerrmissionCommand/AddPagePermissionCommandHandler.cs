@@ -20,17 +20,22 @@ namespace WebApplication2.Business.Roles.Commands.AddPagePermissionCommand
         {
             var response = new RecordIDResponse();
 
-            PagePermissionClass pagePermissionClass = new PagePermissionClass()
-            {
-                RoleId = request.Data.ExtraParamsFormValues.RoleId,
-                PageId = request.Data.ExtraParamsFormValues.PageId,
-            };
-            var permissionId = pagePermissionsService.AddPagePermission(pagePermissionClass);
+            if (request.Data.ExtraParamsFormValues.RoleId != null && request.Data.ExtraParamsFormValues.PageId != null) {
+                PagePermissionClass pagePermissionClass = new PagePermissionClass()
+                {
+                    ID_role = (int)request.Data.ExtraParamsFormValues.RoleId,
+                    ID_page = (int)request.Data.ExtraParamsFormValues.PageId,
+                };
+                var permissionId = pagePermissionsService.AddPagePermission(pagePermissionClass);
 
-            if (permissionId == -1)
-                throw new BaseException(UserApplicationMessages.MAPPING_EXISTS);
+                if (permissionId == -1)
+                {
+                    response.AddMessage(new BaseException(UserApplicationMessages.MAPPING_EXISTS));
+                    return response;
+                }
 
-            response.SetId(permissionId);
+                response.SetId(permissionId);
+            }
             return response;
         }
     }

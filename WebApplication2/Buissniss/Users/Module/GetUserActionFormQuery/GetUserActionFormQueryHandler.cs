@@ -9,6 +9,7 @@ using WebApplication2.Business.User.Commands.AddRoleToUserCommand;
 using WebApplication2.Services;
 using WebApplication2.Business.User.Commands.SyncDomainUsersCommand;
 using WebApplication2.Business.User.Commands.EditProfileCommand;
+using WebApplication2.Business.User.Commands.ChangePasswordCommand;
 
 namespace WebApplication2.Buissniss.Users.Module.GetUserActionFormQuery
 {
@@ -58,6 +59,11 @@ namespace WebApplication2.Buissniss.Users.Module.GetUserActionFormQuery
             if (request.Data.FormCode == UserTableActions.EDIT_PROFILE)
             {
                 obj = await EditProfileCommandForm.GetEditProfileCommandForm(userService, roleService, pagesService, appService, httpContextAccessor, cancellationToken);
+            }
+
+            if (request.Data.FormCode == UserTableActions.CHANGE_PASSWORD)
+            {
+                obj = await ChangePasswordCommandForm.GetChangePasswordForm(request.Data, userService, appService, httpContextAccessor, cancellationToken);
             }
 
             result.Data = obj;

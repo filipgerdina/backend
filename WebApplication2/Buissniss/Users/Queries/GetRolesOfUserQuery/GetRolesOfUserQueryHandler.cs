@@ -34,17 +34,17 @@ namespace WebApplication2.Buissniss.User.Queries.GetRolesOfUserQuery
                 Id = _usersService.GetUserRoleMapping(user.Id, r.Id).Id,
                 RoleId = r.Id,
                 Name = r.Name,
-                DefaultPage = _pagesService.GetPages().ToList().FindAll(p => p.Id == r.DefaultPageId).Count > 0 ? _pagesService.GetPages().ToList().FindAll(p => p.Id == r.DefaultPageId).Select(p => p.Name).First() : null,
+                DefaultPage = _pagesService.GetPages().ToList().FindAll(p => p.Id == r.ID_home_page).Count > 0 ? _pagesService.GetPages().ToList().FindAll(p => p.Id == r.ID_home_page).Select(p => p.Name).First() : null,
             }).ToList();
 
             //if (user != null && userRoles != null)
             //{
             //    result.Data = userRoles.Select(u => new GetRolesOfUserQueryDTO()
             //    {
-            //        RoleId = u.RoleId,
-            //        RoleId = u.RoleId,
+            //        Id = u.Id,
+            //        Id = u.Id,
             //        Name = u.Name,
-            //        DefaultPage = _navigationGroupService.GetPages().ToList().FindAll(p => p.RoleId == _usersService.GetUserDefaultPage(user.RoleId).RoleId).Select(p => p.Name).First() ?? null,
+            //        DefaultPage = _navigationGroupService.GetPages().ToList().FindAll(p => p.Id == _usersService.GetUserDefaultPage(user.Id).Id).Select(p => p.Name).First() ?? null,
             //    }).ToList();
             //}
 

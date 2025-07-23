@@ -22,7 +22,7 @@ namespace WebApplication2.Buissniss.Roles.Queries.GetNavigationGroupsOfRoleQuery
 
             var result = new CoreListResponse<GetNavigationGroupsOfRoleQueryDTO>();
 
-            var navigationGroupIds = _navigationGroupPermissionsService.GetRolesNavigationGroupPermissions(request.RoleId).Select(pp => pp.NavigationGroupId);
+            var navigationGroupIds = _navigationGroupPermissionsService.GetRolesNavigationGroupPermissions(request.RoleId).Select(pp => pp.ID_navigation_group);
             result.Data = _navigationGroupService.GetNavigationGroups().ToList().FindAll(p => !navigationGroupIds.Contains(p.Id)).Select(u => new GetNavigationGroupsOfRoleQueryDTO()
             { 
                 Id = u.Id,

@@ -24,6 +24,7 @@ namespace WebApplication2.Business.Utl.Commands.EditApplicationSettingsCommand
             var appSettings = new EditApplicationSettingsClass
             {
                 Id = applicationSettingsService.GetApplicationSettings().Id,
+                UseStrongPassword = request.Data.ExtraParamsFormValues.UseStrongPassword,
                 LanguageId = request.Data.ExtraParamsFormValues.LanguageId,
                 DateTimeFormatId = request.Data.ExtraParamsFormValues.DateTimeFormatId,
                 DecimalSeperatorId = request.Data.ExtraParamsFormValues.DecimalSeperatorId,

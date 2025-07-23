@@ -51,27 +51,27 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
             var allPages = _pagesService.GetPages().ToList();
 
             // Admin: return all groups
-            if (userRoleIds.Contains(1))
+            if (userRoleIds.Contains(2))
             {
                 result.Data = allNavGroups.Select(g => new GetNavigationGroupsQueryDTO
                 {
                     Id = g.Id,
-                    ParentGroupId = g.ParentGroupId,
+                    ParentGroupId = g.ID_parent_group,
                     Name = g.Name,
-                    IconUrl = g.IconUrl
+                    IconUrl = g.Icon
                 }).ToList();
                 return result;
             }
 
             // Step 1: Get permitted page IDs
             var permittedPageIds = _pagePermissionsService.GetPagePermissions()
-                .Where(p => p.RoleId != null && userRoleIds.Contains((int)p.RoleId))
-                .Select(p => p.PageId)
+                .Where(p => p.ID_role != null && userRoleIds.Contains((int)p.ID_role))
+                .Select(p => p.ID_page)
                 .ToHashSet();
 
             // Step 2: Pages user has access to
             var userPages = allPages
-                .Where(p => permittedPageIds.Contains(p.Id) && p.NavigationGroup != null)
+                .Where(p => permittedPageIds.Contains(p.Id) && p.ID_group != null)
                 .ToList();
 
             // Step 3: Collect groups from user-accessible pages
@@ -80,14 +80,14 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
 
             foreach (var page in userPages)
             {
-                var currentGroupId = page.NavigationGroup.Id;
+                var currentGroupId = page.ID_group;
 
-                while (groupMap.TryGetValue(currentGroupId, out var group))
+                while (currentGroupId != null && groupMap.TryGetValue((int)currentGroupId, out var group))
                 {
                     if (!groupIdsToInclude.Add(group.Id)) break; // Already included
 
-                    if (group.ParentGroupId.HasValue)
-                        currentGroupId = group.ParentGroupId.Value;
+                    if (group.ID_parent_group.HasValue)
+                        currentGroupId = group.ID_parent_group.Value;
                     else
                         break;
                 }
@@ -95,10 +95,8 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
 
             // Step 4: Add groups the user has direct access to, and their parents
             var permittedNavGroupIds = _navigationGroupPermissionsService.GetNavigationGroupPermissions()
-                .Where(p => p.RoleId != null && userRoleIds.Contains((int)p.RoleId))
-                .Select(p => p.NavigationGroupId)
-                .Where(id => id.HasValue)
-                .Select(id => id.Value)
+                .Where(p => p.ID_role != null && userRoleIds.Contains((int)p.ID_role))
+                .Select(p => p.ID_navigation_group)
                 .ToList();
 
             foreach (var groupId in permittedNavGroupIds)
@@ -109,8 +107,8 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
                 {
                     if (!groupIdsToInclude.Add(group.Id)) break; // Already included
 
-                    if (group.ParentGroupId.HasValue)
-                        currentGroupId = group.ParentGroupId.Value;
+                    if (group.ID_parent_group.HasValue)
+                        currentGroupId = group.ID_parent_group.Value;
                     else
                         break;
                 }
@@ -132,9 +130,9 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
                 .Select(g => new GetNavigationGroupsQueryDTO
                 {
                     Id = g.Id,
-                    ParentGroupId = g.ParentGroupId,
+                    ParentGroupId = g.ID_parent_group,
                     Name = g.Name,
-                    IconUrl = g.IconUrl
+                    IconUrl = g.Icon
                 }).ToList();
 
             return result;
@@ -145,9 +143,9 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
 
             foreach (var item in _navigationGroupService.GetNavigationGroups())
             {
-                if (item.ParentGroupId == groupId)
+                if (item.ID_parent_group == groupId)
                 {
-                    if (_navigationGroupService.GetNavigationGroups().Any(g => g.ParentGroupId == item.Id))
+                    if (_navigationGroupService.GetNavigationGroups().Any(g => g.ID_parent_group == item.Id))
                         GetGroupSubgroups(item.Id, list);
                     else
                         list.Add(item.Id);

@@ -23,7 +23,7 @@ namespace WebApplication2.Buissniss.Roles.Queries.GetPagePermissionsOfRoleQuery
             result.Data = _pagePermissionsService.GetRolesPagePermissions(request.RoleId).Select(pp => new GetPagePermissionsOfRoleQueryDTO()
             {
                 Id = (int)pp.Id,
-                Name = _pagesService.GetPages().ToList().Find(p => p.Id == pp.PageId).Name,
+                Name = _pagesService.GetPages().ToList().Find(p => p.Id == pp.ID_page).Name,
             }).ToList();
 
             return result;

@@ -11,12 +11,18 @@ namespace WebApplication2.Models.CodeList
     {
         public const string an_com_NEW_USER_key = "an_com_NEW_USER_key";
 
-        public const string USERNAME_NOT_UNIQUE = "Username is not unique.";
+        public const string USERNAME_NOT_UNIQUE = "s:usernameNotUnique";
 
-        public const string USER_ALREADY_HAS_THIS_ROLE = "Username already has this role.";
+        public const string INCORRECT_PASSWORD = "s:incorrectOldPassword";
 
-        public const string ROLE_NAME_NOT_UNIQUE = "Name is not unique.";
+        public const string PASSWORDS_ARE_NOT_SAME = "s:passwordNotSame";
 
-        public const string MAPPING_EXISTS = "Mapping allready exists.";
+        public const string UNMEET_PASSWORD_REQUIREMENTS = "s:newPasswordNotStrong";
+
+        public const string USER_ALREADY_HAS_THIS_ROLE = "s:userAlreadyInRole";
+
+        public const string ROLE_NAME_NOT_UNIQUE = "s:roleNameNotUnique";
+
+        public const string MAPPING_EXISTS = "s:mappingAlreadyExists";
     }
 }

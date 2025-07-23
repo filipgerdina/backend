@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApplication2.Buissniss.User.Queries.GetUsersQuery;
@@ -12,28 +13,32 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy
-          .WithOrigins("http://localhost:5173", "http://localhost:4173") // <-- your frontend address
+          .WithOrigins("http://localhost:5173", "http://localhost:4173", "http://localhost:3000") // <-- your frontend address
           .AllowAnyHeader()
           .AllowAnyMethod()
           .AllowCredentials(); // <-- REQUIRED for SignalR cross-origin
     });
 });
 
+builder.Services.AddResponseCaching();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddSingleton<ApplicationSettingsService>();
-builder.Services.AddSingleton<TranslationService>();
-builder.Services.AddSingleton<ModuleService>();
-builder.Services.AddSingleton<NavigationGroupService>();
-builder.Services.AddSingleton<PagesService>();
-builder.Services.AddSingleton<DataSourceService>();
-builder.Services.AddSingleton<RoleService>();
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<PagePermissionsService>();
-builder.Services.AddSingleton<NavigationGroupPermissionsService>();
+builder.Services.AddScoped<ApplicationSettingsService>();
+builder.Services.AddScoped<TranslationService>();
+builder.Services.AddScoped<ModuleService>();
+builder.Services.AddScoped<NavigationGroupService>();
+builder.Services.AddScoped<PagesService>();
+builder.Services.AddScoped<DataSourceService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<PagePermissionsService>();
+builder.Services.AddScoped<NavigationGroupPermissionsService>();
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetUsersQueryHandler).Assembly));
-builder.Services.AddSingleton<JwtTokenGenerator>();
+builder.Services.AddScoped<JwtTokenGenerator>();
 
 builder.Services.AddSignalR();
 
@@ -87,6 +92,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+app.UseResponseCaching();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();

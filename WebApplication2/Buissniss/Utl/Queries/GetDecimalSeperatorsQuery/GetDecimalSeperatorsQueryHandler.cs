@@ -22,11 +22,11 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetDecimalSeperatorsQuery
 
             var result = new CoreListResponse<GetDecimalSeperatorsQueryDTO>();
 
-            result.Data = _applicationSettingsService.GetDecimalSeperators().Select(u => new GetDecimalSeperatorsQueryDTO()
+            result.Data = _applicationSettingsService.GetDecimalSeparators().Select(u => new GetDecimalSeperatorsQueryDTO()
             {
                 Id = u.Id,
                 Value = u.Value,
-                DisplayName = u.DisplayValue
+                DisplayName = u.Display_Value
             }).ToList();
             return result;
         }

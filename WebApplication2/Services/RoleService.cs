@@ -1,69 +1,66 @@
 ﻿using WebApplication2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Services
 {
     public class RoleService
     {
+        private readonly AppDbContext _db;
         private readonly PagePermissionsService _pagePermissionsService;
 
-
-        public RoleService(PagePermissionsService pagePermissionsService)
+        public RoleService(AppDbContext db, PagePermissionsService pagePermissionsService)
         {
+            _db = db;
             _pagePermissionsService = pagePermissionsService;
         }
 
-        private static List<RoleClass> _roles = new()
-        {
-            new RoleClass { Id = 1, Name = "Admin", DefaultPageId = 1 },
-            new RoleClass { Id = 2, Name = "ADF-dev" },
-            //new RoleClass { RoleId = 4, Name = "ADF-ogl" },
+        public IEnumerable<RoleClass> GetRoles() =>
+            _db.Roles.ToList();
 
-        };
+        public RoleClass? GetRoleById(int id) =>
+            _db.Roles.FirstOrDefault(r => r.Id == id);
 
-        public IEnumerable<RoleClass> GetRoles() => _roles;
-
-        public RoleClass? GetRoleById(int id) => _roles.FirstOrDefault(r => r.Id == id);
-        public RoleClass? GetRoleByName(string name) => _roles.FirstOrDefault(r => r.Name == name);
+        public RoleClass? GetRoleByName(string name) =>
+            _db.Roles.FirstOrDefault(r => r.Name == name);
 
         public int AddRole(RoleClassEdit role)
         {
-            if (_roles.Any(u => u.Name == role.Name))
+            if (_db.Roles.Any(r => r.Name == role.Name))
                 return -1;
 
-            role.Id = _roles.Last().Id + 1;
-
-            RoleClass addedRole = new RoleClass()
+            var newRole = new RoleClass
             {
-                Id = role.Id,
                 Name = role.Name,
-                DefaultPageId = role.DefaultPageId,
+                ID_home_page = role.DefaultPageId,
+                Added = DateTime.UtcNow
             };
 
-            addedRole.Added = DateTime.UtcNow;
-            _roles.Add(addedRole);
+            _db.Roles.Add(newRole);
+            _db.SaveChanges();
 
-            if (addedRole.DefaultPageId != null) {
-                var pagePermission = new PagePermissionClass()
+            if (newRole.ID_home_page != null)
+            {
+                var pagePermission = new PagePermissionClass
                 {
-                    PageId = addedRole.DefaultPageId,
-                    RoleId = role.Id
+                    ID_page = (int)newRole.ID_home_page,
+                    ID_role = newRole.Id
                 };
                 _pagePermissionsService.AddPagePermission(pagePermission);
             }
 
-            return role.Id;
+            return newRole.Id;
         }
 
         public int EditRole(RoleClassEdit role)
         {
-            var editRole = _roles.Find(u => u.Id == role.Id);
+            var editRole = _db.Roles.FirstOrDefault(r => r.Id == role.Id);
             if (editRole == null)
                 return -1;
 
-            editRole.DefaultPageId = role.DefaultPageId;
+            editRole.ID_home_page = role.DefaultPageId;
+            _db.SaveChanges();
 
             return editRole.Id;
         }
     }
-
 }

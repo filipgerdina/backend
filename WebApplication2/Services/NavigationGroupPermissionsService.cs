@@ -1,56 +1,61 @@
-﻿using WebApplication2.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WebApplication2.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication2.Services
 {
     public class NavigationGroupPermissionsService
     {
+        private readonly AppDbContext _db;
         private readonly UserService _userService;
-        //private readonly NavigationGroupService _navigationGroupService;
 
-        public NavigationGroupPermissionsService(UserService userService)
+        public NavigationGroupPermissionsService(AppDbContext db, UserService userService)
         {
+            _db = db;
             _userService = userService;
-            //_navigationGroupService = navigationGroupService;
         }
 
-        private List<NavigationGroupPermissionsClass> navigationGroupPermissions = new List<NavigationGroupPermissionsClass>() {
-            new() {
-                Id = 1,
-                RoleId = 1,
-                NavigationGroupId = 1,
-            }
-        };
         public NavigationGroupPermissionsClass GetNavigationGroupPermission(int id)
         {
-            return navigationGroupPermissions.Find(p => p.Id == id);
+            return _db.NavigationGroupPermissions.FirstOrDefault(p => p.Id == id);
         }
 
         public List<NavigationGroupPermissionsClass> GetNavigationGroupPermissions()
         {
-            return navigationGroupPermissions;
+            return _db.NavigationGroupPermissions.ToList();
         }
 
-        public IEnumerable<NavigationGroupPermissionsClass> GetRolesNavigationGroupPermissions(int roleId) { 
-            return navigationGroupPermissions.FindAll(p => p.RoleId == roleId);
+        public IEnumerable<NavigationGroupPermissionsClass> GetRolesNavigationGroupPermissions(int roleId)
+        {
+            return _db.NavigationGroupPermissions.Where(p => p.ID_role == roleId).ToList();
         }
 
         public int AddNavigationGroupPermission(NavigationGroupPermissionsClass navigationGroupPermission)
         {
-            if (this.navigationGroupPermissions.Any(p => p.RoleId == navigationGroupPermission.RoleId && p.NavigationGroupId == navigationGroupPermission.NavigationGroupId))
+            var exists = _db.NavigationGroupPermissions
+                .Any(p => p.ID_role == navigationGroupPermission.ID_role &&
+                          p.ID_navigation_group == navigationGroupPermission.ID_navigation_group);
+
+            if (exists)
                 return -1;
-            navigationGroupPermission.Id = this.navigationGroupPermissions.Last().Id + 1;
-            navigationGroupPermissions.Add(navigationGroupPermission);
-            return (int)navigationGroupPermission.Id;
+
+            _db.NavigationGroupPermissions.Add(navigationGroupPermission);
+            _db.SaveChanges();
+
+            return navigationGroupPermission.Id;
         }
 
-        public int RemoveNavigationGroupPermission(int permissionId) {
-            var navigationGroupPermission = GetNavigationGroupPermission(permissionId);
-
-            if (navigationGroupPermission == null)
+        public int RemoveNavigationGroupPermission(int permissionId)
+        {
+            var permission = _db.NavigationGroupPermissions.FirstOrDefault(p => p.Id == permissionId);
+            if (permission == null)
                 return -1;
 
-            navigationGroupPermissions.Remove(navigationGroupPermission);
-            return (int)navigationGroupPermission.Id;
+            _db.NavigationGroupPermissions.Remove(permission);
+            _db.SaveChanges();
+
+            return permission.Id;
         }
     }
 }

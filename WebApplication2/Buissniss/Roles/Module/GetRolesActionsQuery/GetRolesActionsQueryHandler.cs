@@ -59,7 +59,7 @@ namespace WebApplication2.Buissniss.Roles.Module.GetRolesActionsQuery
                 ExtraParamsFormUrl = "POST;/com/module/forms?FormCode=EDIT_ROLE",
                 ActionProcedure = "POST;/roles/roles/{id}",
             });
-            if (request.RecordTypeCode.Equals(UserRecordTypes.ROLE_PAGE_PERMISSIONS) && (request.RecordId == null || pagePermissionsService.GetRolesPagePermissions((int)pagePermissionsService.GetPagePermission((int)request.RecordId).RoleId).Count() != pagesService.GetPages().Count()))
+            if (request.RecordTypeCode.Equals(UserRecordTypes.ROLE_PAGE_PERMISSIONS) && (request.RecordId == null || pagePermissionsService.GetRolesPagePermissions((int)pagePermissionsService.GetPagePermission((int)request.RecordId).ID_role).Count() != pagesService.GetPages().Count()))
             {
                 actions.Add(new ActionsQueryDTO()
                 {
@@ -85,7 +85,7 @@ namespace WebApplication2.Buissniss.Roles.Module.GetRolesActionsQuery
                 });
             }
 
-            if (request.RecordTypeCode.Equals(UserRecordTypes.ROLE_NAVIGATION_GROUP_PERMISSIONS) && (request.RecordId == null || navigationGroupPermissionsService.GetRolesNavigationGroupPermissions((int)navigationGroupPermissionsService.GetNavigationGroupPermission((int)request.RecordId).RoleId).Count() != navigationGroupService.GetNavigationGroups().Count())) {
+            if (request.RecordTypeCode.Equals(UserRecordTypes.ROLE_NAVIGATION_GROUP_PERMISSIONS) && (request.RecordId == null || navigationGroupPermissionsService.GetRolesNavigationGroupPermissions((int)navigationGroupPermissionsService.GetNavigationGroupPermission((int)request.RecordId).ID_role).Count() != navigationGroupService.GetNavigationGroups().Count())) {
                 actions.Add(new ActionsQueryDTO()
                 {
                     RecordTypeCode = UserRecordTypes.ROLE_NAVIGATION_GROUP_PERMISSIONS,

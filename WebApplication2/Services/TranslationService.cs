@@ -19,7 +19,7 @@ namespace WebApplication2.Services
             new() { Id = 4, Key = "s:signOut", LanguageId = 2, Value = "Odjava" },
 
             new() { Id = 5, Key = "s:applicationManagement", LanguageId = 1, Value = "Application Management" },
-            new() { Id = 6, Key = "s:applicationManagement", LanguageId = 2, Value = "Upravljanje aplikacij" },
+            new() { Id = 6, Key = "s:applicationManagement", LanguageId = 2, Value = "Upravljanje aplikacije" },
 
             new() { Id = 7, Key = "s:usersAndRoles", LanguageId = 1, Value = "Users and Roles" },
             new() { Id = 8, Key = "s:usersAndRoles", LanguageId = 2, Value = "Uporabniki in vloge" },
@@ -39,11 +39,11 @@ namespace WebApplication2.Services
             new() { Id = 17, Key = "s:email", LanguageId = 1, Value = "Email" },
             new() { Id = 18, Key = "s:email", LanguageId = 2, Value = "E-pošta" },
 
-            new() { Id = 19, Key = "s:isSystem", LanguageId = 1, Value = "Is System" },
-            new() { Id = 20, Key = "s:isSystem", LanguageId = 2, Value = "Je sistemski" },
+            new() { Id = 19, Key = "s:isSystem", LanguageId = 1, Value = "System" },
+            new() { Id = 20, Key = "s:isSystem", LanguageId = 2, Value = "Sistemski" },
 
-            new() { Id = 21, Key = "s:isLocked", LanguageId = 1, Value = "Is Locked" },
-            new() { Id = 22, Key = "s:isLocked", LanguageId = 2, Value = "Je zaklenjen" },
+            new() { Id = 21, Key = "s:isLocked", LanguageId = 1, Value = "Locked" },
+            new() { Id = 22, Key = "s:isLocked", LanguageId = 2, Value = "Zaklenjen" },
 
             new() { Id = 23, Key = "s:domain", LanguageId = 1, Value = "Domain" },
             new() { Id = 24, Key = "s:domain", LanguageId = 2, Value = "Domena" },
@@ -152,35 +152,94 @@ namespace WebApplication2.Services
             new() { Id = 93, Key = "s:removeRoleFromUser", LanguageId = 1, Value = "Remove Role From User" },
             new() { Id = 94, Key = "s:removeRoleFromUser", LanguageId = 2, Value = "Odstrani vlogo uporabniku" },
 
-            new() { Id = 95, Key = "s:newRole", LanguageId = 1, Value = "New Role" },
-            new() { Id = 96, Key = "s:newRole", LanguageId = 2, Value = "Nova vloga" },
+            new() { Id = 95, Key = "s:newRole", LanguageId = 1, Value = "Add Role" },
+            new() { Id = 96, Key = "s:newRole", LanguageId = 2, Value = "Dodaj vlogo" },
 
             new() { Id = 97, Key = "s:pagePermissions", LanguageId = 1, Value = "Page Permissions" },
-            new() { Id = 98, Key = "s:pagePermissions", LanguageId = 2, Value = "Dovoljenja strani" },
+            new() { Id = 98, Key = "s:pagePermissions", LanguageId = 2, Value = "Dostopi do strani" },
 
             new() { Id = 99, Key = "s:navigationGroupPermissions", LanguageId = 1, Value = "Navigation Group Permissions" },
-            new() { Id = 100, Key = "s:navigationGroupPermissions", LanguageId = 2, Value = "Dovoljenja navigacijskih skupin" },
+            new() { Id = 100, Key = "s:navigationGroupPermissions", LanguageId = 2, Value = "Dostopi do navigacijskih skupin" },
 
             new() { Id = 101, Key = "s:editRole", LanguageId = 1, Value = "Edit Role" },
             new() { Id = 102, Key = "s:editRole", LanguageId = 2, Value = "Uredi vlogo" },
 
             new() { Id = 103, Key = "s:addPagePermission", LanguageId = 1, Value = "Add Page Permission" },
-            new() { Id = 104, Key = "s:addPagePermission", LanguageId = 2, Value = "Dodaj dovoljenje strani" },
+            new() { Id = 104, Key = "s:addPagePermission", LanguageId = 2, Value = "Dodaj dostop do strani" },
 
             new() { Id = 105, Key = "s:removePagePermission", LanguageId = 1, Value = "Remove Page Permission" },
-            new() { Id = 106, Key = "s:removePagePermission", LanguageId = 2, Value = "Odstrani dovoljenje strani" },
+            new() { Id = 106, Key = "s:removePagePermission", LanguageId = 2, Value = "Odstrani dostop do strani" },
 
             new() { Id = 107, Key = "s:addNavigationGroupPermission", LanguageId = 1, Value = "Add Navigation Group Permission" },
-            new() { Id = 108, Key = "s:addNavigationGroupPermission", LanguageId = 2, Value = "Dodaj navigacijskih skupin" },
+            new() { Id = 108, Key = "s:addNavigationGroupPermission", LanguageId = 2, Value = "Dodaj dostop do navigacijske skupine" },
 
             new() { Id = 109, Key = "s:removeNavigationGroupPermission", LanguageId = 1, Value = "Remove Navigation Group Permission" },
-            new() { Id = 110, Key = "s:removeNavigationGroupPermission", LanguageId = 2, Value = "Odstrani dovoljenje navigacijskih skupin" },
+            new() { Id = 110, Key = "s:removeNavigationGroupPermission", LanguageId = 2, Value = "Odstrani dostop navigacijskih skupin" },
 
             new() { Id = 111, Key = "s:navigationGroup", LanguageId = 1, Value = "Navigation Group" },
             new() { Id = 112, Key = "s:navigationGroup", LanguageId = 2, Value = "Navigacijska skupina" },
 
             new() { Id = 113, Key = "s:page", LanguageId = 1, Value = "Page" },
             new() { Id = 114, Key = "s:page", LanguageId = 2, Value = "Stran" },
+
+            new() { Id = 115, Key = "s:applicationSettings", LanguageId = 1, Value = "Application Settings" },
+            new() { Id = 116, Key = "s:applicationSettings", LanguageId = 2, Value = "Nastavitve aplikacije" },
+
+            new() { Id = 117, Key = "s:oldPassword", LanguageId = 1, Value = "Old Password" },
+            new() { Id = 118, Key = "s:oldPassword", LanguageId = 2, Value = "Staro geslo" },
+
+            new() { Id = 119, Key = "s:newPassword", LanguageId = 1, Value = "New Password" },
+            new() { Id = 120, Key = "s:newPassword", LanguageId = 2, Value = "Novo geslo" },
+
+            new() { Id = 121, Key = "s:confirmNewPassword", LanguageId = 1, Value = "Confirm New Password" },
+            new() { Id = 122, Key = "s:confirmNewPassword", LanguageId = 2, Value = "Potrdi novo geslo" },
+
+            new() { Id = 123, Key = "s:submit", LanguageId = 1, Value = "Save" },
+            new() { Id = 124, Key = "s:submit", LanguageId = 2, Value = "Shrani" },
+
+            new() { Id = 125, Key = "s:useStrongPassword", LanguageId = 1, Value = "Use Strong Password" },
+            new() { Id = 126, Key = "s:useStrongPassword", LanguageId = 2, Value = "Uporabi močno geslo" },
+
+            new() { Id = 127, Key = "s:importUsersFromDomain", LanguageId = 1, Value = "Import Users from Domain" },
+            new() { Id = 128, Key = "s:importUsersFromDomain", LanguageId = 2, Value = "Uvozi uporabnike iz domene" },
+
+            new() { Id = 129, Key = "s:changePassword", LanguageId = 1, Value = "Change Password" },
+            new() { Id = 130, Key = "s:changePassword", LanguageId = 2, Value = "Sprememba gesla" },
+
+            new() { Id = 131, Key = "s:strongPasswordDescription", LanguageId = 1, Value = "Password must contain at least one uppercase letter, one lowercase letter, and one number." },
+            new() { Id = 132, Key = "s:strongPasswordDescription", LanguageId = 2, Value = "Geslo mora vsebovati vsaj eno veliko črko, eno malo črko in eno številko." },
+            
+            new() { Id = 133, Key = "s:invalidCredentials", LanguageId = 1, Value = "Incorrect username or password." },
+            new() { Id = 134, Key = "s:invalidCredentials", LanguageId = 2, Value = "Napačno uporabniško ime ali geslo." },
+
+            new() { Id = 135, Key = "s:accountIsLocked", LanguageId = 1, Value = "This account is locked." },
+            new() { Id = 136, Key = "s:accountIsLocked", LanguageId = 2, Value = "Ta račun je zaklenjen." },
+
+            new() { Id = 137, Key = "s:login", LanguageId = 1, Value = "Login" },
+            new() { Id = 138, Key = "s:login", LanguageId = 2, Value = "Prijava" },
+
+            new() { Id = 139, Key = "s:loggingIn", LanguageId = 1, Value = "Logging In..." },
+            new() { Id = 140, Key = "s:loggingIn", LanguageId = 2, Value = "Prijavljanje..." },
+
+            new() { Id = 141, Key = "s:userAlreadyInRole", LanguageId = 1, Value = "User is already in this role." },
+            new() { Id = 142, Key = "s:userAlreadyInRole", LanguageId = 2, Value = "Uporabnik, je že v teh vlogi" },
+    
+            new() { Id = 143, Key = "s:settings", LanguageId = 1, Value = "Settings" },
+            new() { Id = 144, Key = "s:settings", LanguageId = 2, Value = "NAstavitve" },
+
+            new() { Id = 145, Key = "s:noData", LanguageId = 1, Value = "No Data" },
+            new() { Id = 146, Key = "s:noData", LanguageId = 2, Value = "Ni podatkov" },
+
+            new() { Id = 147, Key = "s:usernameNotUnique", LanguageId = 1, Value = "Username not unique." },
+            new() { Id = 148, Key = "s:usernameNotUnique", LanguageId = 2, Value = "Uporabniško ime ni unikatno." },
+            
+            new() { Id = 149, Key = "s:errorTitle", LanguageId = 1, Value = "Error" },
+            new() { Id = 150, Key = "s:errorTitle", LanguageId = 2, Value = "Napaka" },
+
+            new() { Id = 151, Key = "s:newPasswordNotStrong", LanguageId = 1, Value = "New password is not strong." },
+            new() { Id = 152, Key = "s:newPasswordNotStrong", LanguageId = 2, Value = "Novo geslo ni dovolj močno" },
+
+
 
         };
 

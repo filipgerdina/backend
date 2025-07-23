@@ -35,7 +35,7 @@ namespace WebApplication2.Buissniss.Users.Module.GetUserActionsQuery
             if(request.RecordId != null) {
                 if (request.RecordTypeCode == UserRecordTypes.USER_ROLES)
                 {
-                    var userId = userService.GetUserFromUserRole((int)request.RecordId).Id;
+                    var userId = userService.GetUserByUserRole((int)request.RecordId).Id;
                     rolesOfUser = userService.GetActiveUserRoles(userId).ToList();
                 }
                 if (request.RecordTypeCode == UserRecordTypes.USERS)
@@ -54,22 +54,22 @@ namespace WebApplication2.Buissniss.Users.Module.GetUserActionsQuery
                 ActionProcedure = "POST;/users/users",
             });
 
-            actions.Add(new ActionsQueryDTO()
-            {
-                RecordTypeCode = UserRecordTypes.USERS,
-                ActionId = 2,
-                ActionName = "s:editUser",
-                ActionCode = UserTableActions.EDIT_USER,
-                BaseActionCode = "EDIT",
-                ExtraParamsFormUrl = "POST;/com/module/forms?FormCode=NEW_USER",
-                ActionProcedure = "POST;/users/users/{id}",
-            });
+            //actions.Add(new ActionsQueryDTO()
+            //{
+            //    RecordTypeCode = UserRecordTypes.USERS,
+            //    ActionId = 2,
+            //    ActionName = "s:editUser",
+            //    ActionCode = UserTableActions.EDIT_USER,
+            //    BaseActionCode = "EDIT",
+            //    ExtraParamsFormUrl = "POST;/com/module/forms?FormCode=NEW_USER",
+            //    ActionProcedure = "POST;/users/users/{id}",
+            //});
 
             actions.Add(new ActionsQueryDTO()
             {
                 RecordTypeCode = UserRecordTypes.USERS,
                 ActionId = 5,
-                ActionName = "s:syncDomainUsers",
+                ActionName = "s:importUsersFromDomain",
                 ActionCode = UserTableActions.SYNC_DOMAIN_USERS,
                 BaseActionCode = "SYNC",
                 ExtraParamsFormUrl = "POST;/com/module/forms?FormCode=SYNC_DOMAIN_USERS",
@@ -77,8 +77,8 @@ namespace WebApplication2.Buissniss.Users.Module.GetUserActionsQuery
             });
 
             if (user != null) {
-                if (!user.IsSystem) {
-                    if (user.IsLocked)
+                if (!user.Is_System) {
+                    if (user.Is_Locked)
                     {
                         actions.Add(new ActionsQueryDTO()
                         {

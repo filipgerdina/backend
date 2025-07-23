@@ -20,17 +20,22 @@ namespace WebApplication2.Business.Roles.Commands.AddNavigationGroupPermissionCo
         {
             var response = new RecordIDResponse();
 
-            var navigationGroupPermissionClass = new NavigationGroupPermissionsClass()
-            {
-                RoleId = request.Data.ExtraParamsFormValues.RoleId,
-                NavigationGroupId = request.Data.ExtraParamsFormValues.NavigationGroupId,
-            };
-            var permissionId = navigationGroupPermissionsService.AddNavigationGroupPermission(navigationGroupPermissionClass);
+            if (request.Data.ExtraParamsFormValues.RoleId != null && request.Data.ExtraParamsFormValues.NavigationGroupId != null) {
+                var navigationGroupPermissionClass = new NavigationGroupPermissionsClass()
+                {
+                    ID_role = (int)request.Data.ExtraParamsFormValues.RoleId,
+                    ID_navigation_group = (int)request.Data.ExtraParamsFormValues.NavigationGroupId,
+                };
+                var permissionId = navigationGroupPermissionsService.AddNavigationGroupPermission(navigationGroupPermissionClass);
 
-            if (permissionId == -1)
-                throw new BaseException(UserApplicationMessages.MAPPING_EXISTS);
+                if (permissionId == -1)
+                {
+                    response.AddMessage(new BaseException(UserApplicationMessages.MAPPING_EXISTS));
+                    return response;
+                }
 
-            response.SetId(permissionId);
+                response.SetId(permissionId);
+            }
             return response;
         }
     }

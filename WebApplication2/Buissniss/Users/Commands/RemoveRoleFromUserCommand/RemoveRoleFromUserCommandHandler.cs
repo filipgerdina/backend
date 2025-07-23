@@ -25,7 +25,10 @@ namespace WebApplication2.Business.User.Commands.RemoveRoleFromUserCommand
             var userId = userService.RemoveRoleFromUser(request.Data.GetId());
 
             if (userId == -1)
-                throw new BaseException(UserApplicationMessages.USER_ALREADY_HAS_THIS_ROLE);
+            {
+                response.AddMessage(new BaseException(UserApplicationMessages.USER_ALREADY_HAS_THIS_ROLE));
+                return response;
+            }
 
             response.SetId(userId);
             return response;
