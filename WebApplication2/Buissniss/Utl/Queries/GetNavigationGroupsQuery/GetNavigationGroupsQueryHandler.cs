@@ -51,7 +51,7 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetNavigationGroupsQuery
             var allPages = _pagesService.GetPages().ToList();
 
             // Admin: return all groups
-            if (userRoleIds.Contains(2))
+            if (userEntity.Is_System)
             {
                 result.Data = allNavGroups.Select(g => new GetNavigationGroupsQueryDTO
                 {

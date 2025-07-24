@@ -20,12 +20,6 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetDataSourceQuery
         {
 
             var result = new CoreListResponse<GetDataSourceQueryDTO>();
-
-            result.Data = _dataSourceService.GetDataSources().Select(u => new GetDataSourceQueryDTO()
-            {
-                Id = u.Id,
-                Name = u.Name,
-            }).ToList();
             return result;
         }
     }

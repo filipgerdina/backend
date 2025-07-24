@@ -101,7 +101,8 @@ public class UserService
             Password = user.Password != null ? PasswordHelper.HashPassword(user.Password) : null,
             First_Name = user.FirstName,
             Last_Name = user.LastName,
-            Added = DateTime.UtcNow
+            Added = DateTime.UtcNow,
+            Domain = user.Domain
         };
 
         _db.Users.Add(newUser);
@@ -184,7 +185,7 @@ public class UserService
     public bool IsDomain(string username)
     {
         var user = _db.Users.FirstOrDefault(u => u.Username.ToLower() == username.ToLower());
-        return user is DomainUserClass;
+        return user != null ? user.Domain != null : false;
     }
 
     public UserClass? GetUserByRefreshToken(string token)

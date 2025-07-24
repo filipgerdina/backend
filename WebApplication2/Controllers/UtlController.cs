@@ -39,6 +39,11 @@ using WebApplication2.Models.Responses.ActionForm;
 using WebApplication2.Roles.Module.GetRolesActionsFormQuery;
 using WebApplication2.Services;
 using WebApplication2.Utl.Module.GetUtlActionFormQuery;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace WebApplication2.Controllers
 {
@@ -50,6 +55,7 @@ namespace WebApplication2.Controllers
         private readonly JwtTokenGenerator _tokenGenerator;
         private readonly PagesService _pagesService;
         private readonly NavigationGroupService _navigationGroupService;
+        private readonly DataSourceService _dataSourceService;
         private readonly IHubContext<PagesHub> _hubContext;
 
         public UtlController(
@@ -57,6 +63,7 @@ namespace WebApplication2.Controllers
             JwtTokenGenerator tokenGenerator,
             PagesService pagesService,
             NavigationGroupService navigationGroupService,
+            DataSourceService dsService,
             IMediator mediator,
             IHubContext<PagesHub> hubContext
         ) : base(mediator)
@@ -65,6 +72,7 @@ namespace WebApplication2.Controllers
             _tokenGenerator = tokenGenerator;
             _pagesService = pagesService;
             _navigationGroupService = navigationGroupService;
+            _dataSourceService = dsService;
             _hubContext = hubContext;
         }
 
@@ -199,6 +207,19 @@ namespace WebApplication2.Controllers
         public async Task<IActionResult> Post([FromBody] DataSourcePost parameters)
         {
             var query = new Object();
+
+            DataSourceClass ds = _dataSourceService.GetDataSource(parameters.Name);
+            if (ds != null) {
+                ProcessEndPointActionPost processEndPointActionPost = new ProcessEndPointActionPost
+                {
+                    Name = "https://localhost:8501" + ds.Path,
+                    Method = ds.Method,
+                    UrlParams = parameters.UrlParams,
+                    QueryParams = parameters.QueryParams,
+                    BodyParams = parameters.BodyParams
+                };
+                return await ProcessEndpoint(processEndPointActionPost);
+            }
 
             switch (parameters.Name)
             {
@@ -391,8 +412,9 @@ namespace WebApplication2.Controllers
             return NotFound(new { message = $"No handler for '{parameters.Name}'." });
         }
 
+
         [HttpPost("processEndPointAction")]
-        public async Task<IActionResult> Post([FromBody] ProcessEndPointActionPost parameters)
+        public async Task<IActionResult> ProcessEndpoint([FromBody] ProcessEndPointActionPost parameters)
         {
             using var httpClient = new HttpClient();
 
@@ -451,6 +473,9 @@ namespace WebApplication2.Controllers
             if (!string.IsNullOrEmpty(accessToken))
             {
                 request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken.Replace("Bearer ", ""));
+                request.Headers.Add("as-user", "gef");
+                request.Headers.Add("X-Api-Key", "ppm-123");
+                request.Headers.Add("X-app-Code", "ital");
             }
 
 

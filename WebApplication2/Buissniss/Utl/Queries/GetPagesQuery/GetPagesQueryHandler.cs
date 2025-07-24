@@ -53,7 +53,7 @@ namespace WebApplication2.Buissniss.Utl.Queries.GetPagesQuery
             var allNavGroups = _navigationGroupService.GetNavigationGroups().ToList();
 
             // Admin has access to all
-            if (userRoleIds.Contains(2))
+            if (userEntity.Is_System)
             {
                 result.Data = allPages.FindAll(up => up.ID_module == null || _moduleService.GetModules().ToList().Select(m => m.Id).Contains((int)up.ID_module)).Select(p => new GetPagesQueryDTO
                 {

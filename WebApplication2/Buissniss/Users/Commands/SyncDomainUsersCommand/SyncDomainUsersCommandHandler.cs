@@ -85,7 +85,7 @@ namespace WebApplication2.Business.User.Commands.SyncDomainUsersCommand
                     else
                     {
 
-                        userId = _userService.AddUser(new DomainUserClassEdit()
+                        userId = _userService.AddUser(new UserClassEdit()
                         {
                             Username = username,
                             DisplayName = displayName,
@@ -93,6 +93,7 @@ namespace WebApplication2.Business.User.Commands.SyncDomainUsersCommand
                             Domain = domain,
                             FirstName = givenName,
                             LastName = lastName
+                            
                         });
                     }
 

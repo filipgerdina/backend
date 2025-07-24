@@ -28,7 +28,7 @@ namespace WebApplication2.Buissniss.User.Queries.GetUsersQuery
                 Email = u.Email,
                 IsLocked = u.Is_Locked,
                 IsSystem = u.Is_System,
-                Domain = (u is DomainUserClass) ? (u as DomainUserClass).Domain : null
+                Domain = u.Domain != null ? u.Domain : null
             }).ToList();
 
             return result;

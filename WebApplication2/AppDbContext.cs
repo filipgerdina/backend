@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<LanguageSetting> Languages { get; set; }
     public DbSet<DateTimeFormatSetting> DateTimeFormats { get; set; }
     public DbSet<DecimalSeparatorSetting> DecimalSeparators { get; set; }
+    public DbSet<DataSourceClass> DataSources { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -115,5 +116,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<LanguageSetting>().ToTable("Language", "utl");
         modelBuilder.Entity<DateTimeFormatSetting>().ToTable("Date_Time_Format", "utl");
         modelBuilder.Entity<DecimalSeparatorSetting>().ToTable("Decimal_Separator", "utl");
+
+        modelBuilder.Entity<DataSourceClass>().ToTable("Data_Source", "utl");
     }
 }

@@ -48,7 +48,7 @@ public class GetUserInformationQueryHandler : IRequestHandler<GetUserInformation
                 DisplayName = u.First_Name != null || u.Last_Name != null ? u.First_Name + " " + u.Last_Name : u.Display_Name,
                 FirstName = u.First_Name,
                 LastName = u.Last_Name,
-                DomainUserName = (u is DomainUserClass) ? ((DomainUserClass)u).Domain + "/" + u.Username : null,
+                DomainUserName = u.Domain != null ? u.Domain + "/" + u.Username : null,
                 Email = u.Email,
                 Added = u.Added,
                 RoleNames = _usersService.GetActiveUserRoles(u.Id).Select(r => r.Name).ToList(),

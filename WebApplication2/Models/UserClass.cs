@@ -26,12 +26,8 @@ public class UserClass
     public bool Is_Locked { get; set; }
     public DateTime Added { get; set; }
     public int? ID_Setting { get; set; }
+    public string? Domain { get; set; }
     public ApplicationSettingsClass Settings { get; set; }
-}
-
-public class DomainUserClass: UserClass
-{
-    public string Domain { get; set; }
 }
 
 public class UserClassEdit
@@ -43,6 +39,7 @@ public class UserClassEdit
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? Domain { get; set; }
     public int? RoleId { get; set; }
     public int? LanguageId { get; set; }
     public int? DateTimeFormatId { get; set; }
