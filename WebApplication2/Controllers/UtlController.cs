@@ -393,13 +393,13 @@ namespace WebApplication2.Controllers
                     );
                     return Ok(await _mediator.Send(rolesActionFormQuery));
 
-                case "utlModuleActions":
+                case "coreModuleActions":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
                         return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
                     query = parameters.QueryParams.Deserialize<GetUtlActionsQuery>();
                     return Ok(await _mediator.Send(query));
 
-                case "utlModuleActionForms":
+                case "coreModuleActionForms":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
                         return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
 
