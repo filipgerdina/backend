@@ -240,6 +240,40 @@ namespace WebApplication2.Services
             new() { Id = 152, Key = "s:newPasswordNotStrong", LanguageId = 2, Value = "Novo geslo ni dovolj močno" },
 
 
+            new() { Id = 153, Key = "s:{UTL_RECORD_STATUS}{NONACTIVE}{name_key}", LanguageId = 1, Value = "Non-Active" },
+            new() { Id = 154, Key = "s:{UTL_RECORD_STATUS}{ACTIVE}{name_key}", LanguageId = 1, Value = "Active" },
+            new() { Id = 155, Key = "s:{UTL_RECORD_STATUS}{NEW}{name_key}", LanguageId = 1, Value = "New" },
+
+            new() { Id = 152, Key = "s:enumSets", LanguageId = 1, Value = "Enum Sets" },
+            new() { Id = 152, Key = "s:enumValues", LanguageId = 1, Value = "Enum Values" },
+            new() { Id = 152, Key = "s:id", LanguageId = 1, Value = "Id" },
+            new() { Id = 152, Key = "s:code", LanguageId = 1, Value = "Code" },
+            new() { Id = 152, Key = "s:name", LanguageId = 1, Value = "Name" },
+            new() { Id = 152, Key = "s:description", LanguageId = 1, Value = "Description" },
+            new() { Id = 152, Key = "s:enumGroup", LanguageId = 1, Value = "Enum Group" },
+            new() { Id = 152, Key = "s:recordStatus", LanguageId = 1, Value = "Record Status" },
+            new() { Id = 152, Key = "s:isCheckedOut", LanguageId = 1, Value = "Checked Out" },
+            new() { Id = 152, Key = "s:displayOrder", LanguageId = 1, Value = "DisplayOrder" },
+            new() { Id = 152, Key = "s:string", LanguageId = 1, Value = "String" },
+            new() { Id = 152, Key = "s:value", LanguageId = 1, Value = "Value" },
+
+            new() { Id = 152, Key = "s:{UTL_RECORD_STATUS}{ACTIVE}{name_key}", LanguageId = 1, Value = "Activate" },
+            new() { Id = 152, Key = "s:{UTL_RECORD_STATUS}{NONACTIVE}{name_key}", LanguageId = 1, Value = "Deactivate" },
+            new() { Id = 152, Key = "s:{act}{CHECK_OUT_ENUM_SET}{name_key}", LanguageId = 1, Value = "Start Editing" },
+            new() { Id = 152, Key = "s:{act}{NEW_ALTERNATIVE_UNIT_OF_MEASURE}{name_key}", LanguageId = 1, Value = "New Alternative Unit Of Measure" },
+
+            new() { Id = 152, Key = "s:enumerations", LanguageId = 1, Value = "Enumerations" },
+            new() { Id = 152, Key = "s:unitOfMeasure", LanguageId = 1, Value = "Unit of Measure" },
+            new() { Id = 152, Key = "s:userDefinedDataTypes", LanguageId = 1, Value = "User Defined Data Types" },
+            new() { Id = 152, Key = "s:enumSets", LanguageId = 1, Value = "Enum Sets" },
+            new() { Id = 152, Key = "s:enumGroups", LanguageId = 1, Value = "Enum Groups" },
+            new() { Id = 152, Key = "s:viewMode", LanguageId = 1, Value = "View Mode" },
+            new() { Id = 152, Key = "s:editMode", LanguageId = 1, Value = "Edit Mode" },
+            new() { Id = 152, Key = "s:configuration", LanguageId = 1, Value = "Configuration" },
+            new() { Id = 152, Key = "s:general", LanguageId = 1, Value = "General" },
+            new() { Id = 152, Key = "s:utility", LanguageId = 1, Value = "Utility" },
+
+
 
         };
 

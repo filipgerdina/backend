@@ -302,6 +302,7 @@ using (var scope = app.Services.CreateScope())
             ID_separator = 1,
             ID_language = 1,
             System = true,
+            Use_Strong_Password = true
         });
 
         db.SaveChanges();

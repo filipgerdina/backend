@@ -209,17 +209,18 @@ namespace WebApplication2.Controllers
             var query = new Object();
 
             DataSourceClass ds = _dataSourceService.GetDataSource(parameters.Name);
-            if (ds != null) {
-                ProcessEndPointActionPost processEndPointActionPost = new ProcessEndPointActionPost
-                {
-                    Name = "https://localhost:8501" + ds.Path,
-                    Method = ds.Method,
-                    UrlParams = parameters.UrlParams,
-                    QueryParams = parameters.QueryParams,
-                    BodyParams = parameters.BodyParams
-                };
-                return await ProcessEndpoint(processEndPointActionPost);
-            }
+            //if (ds != null)
+            //{
+            //    ProcessEndPointActionPost processEndPointActionPost = new ProcessEndPointActionPost
+            //    {
+            //        Name = (parameters.Name.Contains("coreModule") || parameters.Name.Contains("userModule")) ? ("https://localhost:7241" + ds.Path) : ("https://localhost:8501" + ds.Path),
+            //        Method = ds.Method,
+            //        UrlParams = parameters.UrlParams,
+            //        QueryParams = parameters.QueryParams,
+            //        BodyParams = parameters.BodyParams
+            //    };
+            //    return await ProcessEndpoint(processEndPointActionPost);
+            //}
 
             switch (parameters.Name)
             {
@@ -376,7 +377,18 @@ namespace WebApplication2.Controllers
                     var userActionFormQuery = parameters.QueryParams.Deserialize<GetUserActionFormQuery>(
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
                     );
+
                     return Ok(await _mediator.Send(userActionFormQuery));
+
+                case "userModuleActionForms1":
+                    if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.BodyParams.ValueKind == JsonValueKind.Null)
+                        return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
+
+                    var userActionFormQuery1 = parameters.BodyParams.Deserialize<GetUserActionFormQuery>(
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                    );
+
+                    return Ok(await _mediator.Send(userActionFormQuery1));
 
                 case "rolesModuleActions":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
@@ -393,13 +405,13 @@ namespace WebApplication2.Controllers
                     );
                     return Ok(await _mediator.Send(rolesActionFormQuery));
 
-                case "coreModuleActions":
+                case "utlModuleActions":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
                         return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
                     query = parameters.QueryParams.Deserialize<GetUtlActionsQuery>();
                     return Ok(await _mediator.Send(query));
 
-                case "coreModuleActionForms":
+                case "utlModuleActionForms":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
                         return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
 
@@ -476,6 +488,8 @@ namespace WebApplication2.Controllers
                 request.Headers.Add("as-user", "gef");
                 request.Headers.Add("X-Api-Key", "ppm-123");
                 request.Headers.Add("X-app-Code", "ital");
+                request.Headers.Add("user-lcid", "2057");
+                request.Headers.Add("Accept", "*/*");
             }
 
 
