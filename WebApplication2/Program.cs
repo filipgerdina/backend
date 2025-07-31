@@ -201,12 +201,6 @@ using (var scope = app.Services.CreateScope())
             Module_Path = "/role-management/remoteEntry.js",
         });
 
-        db.Modules.Add(new ModuleClass
-        {
-            Name = "utl",
-            Module_Path = "/utl/remoteEntry.js",
-        });
-
         db.SaveChanges();
     }
 
@@ -223,19 +217,6 @@ using (var scope = app.Services.CreateScope())
             Name = "s:usersAndRoles",
             Icon = "usersAndRoles.svg",
             ID_parent_group = 1
-        });
-
-        db.NavigationGroups.Add(new NavigationGroupClass
-        {
-            Name = "s:configuration",
-            Icon = "usersAndRoles.svg"
-        });
-
-        db.NavigationGroups.Add(new NavigationGroupClass
-        {
-            Name = "s:general",
-            Icon = "usersAndRoles.svg",
-            ID_parent_group = 3
         });
 
         db.SaveChanges();
@@ -281,16 +262,6 @@ using (var scope = app.Services.CreateScope())
             ID_group = 1
         });
 
-        db.Pages.Add(new PageClass
-        {
-            Name = "s:utility",
-            Icon = "applicationManagement.svg",
-            Path = "/configuration/utility",
-            Component_Name = "./Utility",
-            ID_group = 4,
-            ID_module = 3
-        });
-
         db.SaveChanges();
     }
 
@@ -307,54 +278,6 @@ using (var scope = app.Services.CreateScope())
 
         db.SaveChanges();
     }
-
-    if (!db.DataSources.Any())
-    {
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumSets",
-            Path = "/utl/enumsets",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumValues",
-            Path = "/utl/enumvalues",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumSetsEdit",
-            Path = "/utl/enumsets/edit",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumValuesEdit",
-            Path = "/utl/enumvalues/edit",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlModuleActions",
-            Path = "/utl/module/actions",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlModuleActionForms",
-            Path = "/utl/module/forms",
-            Method = "POST",
-        });
-
-        db.SaveChanges();
-    }
-
 }
 
 app.Run();
