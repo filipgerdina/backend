@@ -209,18 +209,18 @@ namespace WebApplication2.Controllers
             var query = new Object();
 
             DataSourceClass ds = _dataSourceService.GetDataSource(parameters.Name);
-            //if (ds != null)
-            //{
-            //    ProcessEndPointActionPost processEndPointActionPost = new ProcessEndPointActionPost
-            //    {
-            //        Name = (parameters.Name.Contains("coreModule") || parameters.Name.Contains("userModule")) ? ("https://localhost:7241" + ds.Path) : ("https://localhost:8501" + ds.Path),
-            //        Method = ds.Method,
-            //        UrlParams = parameters.UrlParams,
-            //        QueryParams = parameters.QueryParams,
-            //        BodyParams = parameters.BodyParams
-            //    };
-            //    return await ProcessEndpoint(processEndPointActionPost);
-            //}
+            if (ds != null)
+            {
+                ProcessEndPointActionPost processEndPointActionPost = new ProcessEndPointActionPost
+                {
+                    Name = (parameters.Name.Contains("coreModule") || parameters.Name.Contains("userModule")) ? ("https://localhost:7241" + ds.Path) : ("https://localhost:8501" + ds.Path),
+                    Method = ds.Method,
+                    UrlParams = parameters.UrlParams,
+                    QueryParams = parameters.QueryParams,
+                    BodyParams = parameters.BodyParams
+                };
+                return await ProcessEndpoint(processEndPointActionPost);
+            }
 
             switch (parameters.Name)
             {
@@ -370,7 +370,7 @@ namespace WebApplication2.Controllers
                     query = parameters.QueryParams.Deserialize<GetUserActionsQuery>();
                     return Ok(await _mediator.Send(query));
 
-                case "userModuleActionForms":
+                case "userModuleActionForms1":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
                         return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
 
@@ -380,7 +380,7 @@ namespace WebApplication2.Controllers
 
                     return Ok(await _mediator.Send(userActionFormQuery));
 
-                case "userModuleActionForms1":
+                case "userModuleActionForms":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.BodyParams.ValueKind == JsonValueKind.Null)
                         return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
 

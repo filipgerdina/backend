@@ -140,7 +140,7 @@ using (var scope = app.Services.CreateScope())
     {
         db.Languages.Add(new LanguageSetting
         {
-            Value = "en",
+            Value = "en-GB",
             Display_Value = "s:english",
         });
 
@@ -157,16 +157,39 @@ using (var scope = app.Services.CreateScope())
     {
         db.DateTimeFormats.Add(new DateTimeFormatSetting
         {
-            Value = "dd/mm/yyyy",
-            Display_Value = "dd/mm/yyyy",
+            Value = "d.MM.yyyy HH:mm:ss",
+            Display_Value = "d.MM.yyyy HH:mm:ss",
         });
 
         db.DateTimeFormats.Add(new DateTimeFormatSetting
         {
-            Value = "mm/dd/yyyy",
-            Display_Value = "mm/dd/yyyy",
+            Value = "dd.MM.yyyy HH:mm:ss",
+            Display_Value = "dd.MM.yyyy HH:mm:ss",
         });
 
+        db.DateTimeFormats.Add(new DateTimeFormatSetting
+        {
+            Value = "d/MM/yyyy HH:mm:ss",
+            Display_Value = "d/MM/yyyy HH:mm:ss",
+        });
+
+        db.DateTimeFormats.Add(new DateTimeFormatSetting
+        {
+            Value = "dd/MM/yyyy HH:mm:ss",
+            Display_Value = "dd/MM/yyyy HH:mm:ss",
+        });
+
+        db.DateTimeFormats.Add(new DateTimeFormatSetting
+        {
+            Value = "MM/dd/yyyy HH:mm:ss",
+            Display_Value = "MM/dd/yyyy HH:mm:ss",
+        });
+
+        db.DateTimeFormats.Add(new DateTimeFormatSetting
+        {
+            Value = "ddMMM.yyyy HH:mm:ss",
+            Display_Value = "ddMMMyyyy HH:mm:ss",
+        });
         db.SaveChanges();
     }
 
@@ -201,6 +224,12 @@ using (var scope = app.Services.CreateScope())
             Module_Path = "/role-management/remoteEntry.js",
         });
 
+        db.Modules.Add(new ModuleClass
+        {
+            Name = "utl",
+            Module_Path = "/utl/remoteEntry.js",
+        });
+
         db.SaveChanges();
     }
 
@@ -217,6 +246,19 @@ using (var scope = app.Services.CreateScope())
             Name = "s:usersAndRoles",
             Icon = "usersAndRoles.svg",
             ID_parent_group = 1
+        });
+
+        db.NavigationGroups.Add(new NavigationGroupClass
+        {
+            Name = "s:configuration",
+            Icon = "usersAndRoles.svg"
+        });
+
+        db.NavigationGroups.Add(new NavigationGroupClass
+        {
+            Name = "s:general",
+            Icon = "usersAndRoles.svg",
+            ID_parent_group = 3
         });
 
         db.SaveChanges();
@@ -262,6 +304,16 @@ using (var scope = app.Services.CreateScope())
             ID_group = 1
         });
 
+        db.Pages.Add(new PageClass
+        {
+            Name = "s:utility",
+            Icon = "applicationManagement.svg",
+            Path = "/configuration/utility",
+            Component_Name = "./Utility",
+            ID_group = 4,
+            ID_module = 3
+        });
+
         db.SaveChanges();
     }
 
@@ -278,6 +330,82 @@ using (var scope = app.Services.CreateScope())
 
         db.SaveChanges();
     }
+
+    if (!db.DataSources.Any())
+    {
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlEnumSets",
+            Path = "/utl/enumsets",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlEnumValues",
+            Path = "/utl/enumvalues",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlEnumSetsEdit",
+            Path = "/utl/enumsets/edit",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlEnumValuesEdit",
+            Path = "/utl/enumvalues/edit",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlModuleActions",
+            Path = "/utl/module/actions",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlModuleActionForms",
+            Path = "/utl/module/forms",
+            Method = "POST",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlEnumGroupsProd",
+            Path = "/utl/enumgroups/prod",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "utlRecordStatus",
+            Path = "/utl/recordstatus",
+            Method = "GET",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "userModuleActionForms",
+            Path = "/users/forms",
+            Method = "POST",
+        });
+
+        db.DataSources.Add(new DataSourceClass
+        {
+            Name = "coreModuleActionForms",
+            Path = "/utl/forms",
+            Method = "POST",
+        });
+
+        db.SaveChanges();
+    }
+
 }
 
 app.Run();
