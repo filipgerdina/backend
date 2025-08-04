@@ -195,11 +195,11 @@ using (var scope = app.Services.CreateScope())
             Module_Path = "/user-management/remoteEntry.js",
         });
 
-        db.Modules.Add(new ModuleClass
-        {
-            Name = "role-management",
-            Module_Path = "/role-management/remoteEntry.js",
-        });
+        //db.Modules.Add(new ModuleClass
+        //{
+        //    Name = "role-management",
+        //    Module_Path = "/role-management/remoteEntry.js",
+        //});
 
         db.SaveChanges();
     }
@@ -234,15 +234,15 @@ using (var scope = app.Services.CreateScope())
             ID_group = 2
         });
 
-        db.Pages.Add(new PageClass
-        {
-            Name = "s:rolesManagement",
-            Icon = "rolesManagement.svg",
-            Path = "/rolesManagement/users",
-            Component_Name = "./RolesManagement",
-            ID_module = 2,
-            ID_group = 2
-        });
+        //db.Pages.Add(new PageClass
+        //{
+        //    Name = "s:rolesManagement",
+        //    Icon = "rolesManagement.svg",
+        //    Path = "/rolesManagement/users",
+        //    Component_Name = "./RolesManagement",
+        //    ID_module = 2,
+        //    ID_group = 2
+        //});
 
         db.Pages.Add(new PageClass
         {
@@ -281,3 +281,37 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+
+
+/*
+ init skripta
+-- Dodajanje novega modula v [Module]
+INSERT INTO [test].[utl].[Module] (
+    [Name],
+    [Module_Path]
+)
+VALUES (
+    'role-management',
+    '/role-management/remoteEntry.js'
+);
+
+-- Dodajanje nove strani v [Page]
+INSERT INTO [test].[utl].[Page] (
+    [Name],
+    [Icon],
+    [Path],
+    [Component_Name],
+    [ID_module],
+    [ID_group]
+)
+VALUES (
+    's:rolesManagement',
+    'rolesManagement.svg',
+    '/rolesManagement/users',
+    './RolesManagement',
+    2,
+    2
+);
+ 
+ */
