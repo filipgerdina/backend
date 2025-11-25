@@ -272,9 +272,7 @@ namespace WebApplication2.Services
             new() { Id = 152, Key = "s:configuration", LanguageId = 1, Value = "Configuration" },
             new() { Id = 152, Key = "s:general", LanguageId = 1, Value = "General" },
             new() { Id = 152, Key = "s:utility", LanguageId = 1, Value = "Utility" },
-
-
-
+            new() { Id = 152, Key = "s:applicationLogId", LanguageId = 1, Value = "Application Log Id" },
         };
 
         public IEnumerable<TranslationClass> GetTranslations(int langId)

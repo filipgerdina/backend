@@ -44,6 +44,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using WebApplication2.Buissniss.Roles.Queries.GetRolesGroupQuery;
 
 namespace WebApplication2.Controllers
 {
@@ -236,10 +237,22 @@ namespace WebApplication2.Controllers
                     return Ok(await _mediator.Send(new GetNavigationGroupsQuery()));
 
                 case "users":
-                    return Ok(await _mediator.Send(new GetUsersQuery()));
+                    if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
+                        return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
+                    query = parameters.QueryParams.Deserialize<GetUsersQuery>();
+                    return Ok(await _mediator.Send(query));
 
                 case "roles":
-                    return Ok(await _mediator.Send(new GetRolesQuery()));
+                    if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
+                        return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
+                    query = parameters.QueryParams.Deserialize<GetRolesQuery>();
+                    return Ok(await _mediator.Send(query));
+
+                case "rolesGroups":
+                    if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)
+                        return NotFound(new { message = $"Parameters for handler '{parameters.Name}' were undefined" });
+                    query = parameters.QueryParams.Deserialize<GetRolesGroupQuery>();
+                    return Ok(await _mediator.Send(query));
 
                 case "userRoles":
                     if (parameters.QueryParams.ValueKind == JsonValueKind.Undefined || parameters.QueryParams.ValueKind == JsonValueKind.Null)

@@ -18,6 +18,8 @@ using WebApplication2.Buissniss.Roles.Queries.GetPagesOfRoleQuery;
 using WebApplication2.Business.Roles.Commands.RemoveNavigationGroupPerrmissionCommand;
 using WebApplication2.Business.Roles.Commands.AddNavigationGroupPermissionCommand;
 using WebApplication2.Buissniss.Roles.Queries.GetNavigationGroupPermissionsOfRoleQuery;
+using WebApplication2.Buissniss.Roles.Queries.GetRolesGroupQuery;
+using WebApplication2.Models.Request;
 
 namespace WebApplication2.Controllers
 {
@@ -37,6 +39,13 @@ namespace WebApplication2.Controllers
         [HttpGet]
         [Route("roles")]
         public async Task<ActionResult<CoreListResponse<GetRolesQueryDTO>>> GetRoles([FromQuery] GetRolesQuery getRolesQuery)
+        {
+            return await this.SendRequest(getRolesQuery);
+        }
+
+        [HttpGet]
+        [Route("roles/groups")]
+        public async Task<ActionResult<CoreListResponse<GroupResponse>>> GetRolesGroups([FromQuery] GetRolesGroupQuery getRolesQuery)
         {
             return await this.SendRequest(getRolesQuery);
         }

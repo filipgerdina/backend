@@ -21,5 +21,7 @@ namespace WebApplication2.Models.Responses
                 return this.messages;
             }
         }
+
+        public int? TotalCount { get; set; }
     }
 }

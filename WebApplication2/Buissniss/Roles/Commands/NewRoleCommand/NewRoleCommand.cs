@@ -13,7 +13,7 @@ namespace WebApplication2.Business.Roles.Commands.AddRoleCommand
     }
 
     [CoreSecurityAction(UserTableActions.NEW_ROLE)]
-    public class NewRoleCommand : ESignRequest<ActionRequestExtraParam<NewRoleCommandParametersDataFields>, RecordIDResponse>
+    public class NewRoleCommand : ESignRequest<NewRoleCommandParametersDataFields, RecordIDResponse>
     {
 
     }

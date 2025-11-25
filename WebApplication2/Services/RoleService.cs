@@ -15,7 +15,7 @@ namespace WebApplication2.Services
         }
 
         public IEnumerable<RoleClass> GetRoles() =>
-            _db.Roles.ToList();
+            _db.Roles.ToList().Where(r => r.ID_home_page != 1);
 
         public RoleClass? GetRoleById(int id) =>
             _db.Roles.FirstOrDefault(r => r.Id == id);

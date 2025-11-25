@@ -7,26 +7,49 @@ using WebApplication2.Hubs;
 using WebApplication2.Models;
 using WebApplication2.Services;
 
+// ==== NEW: if your interfaces live in another namespace, adjust these usings:
+using WebApplication2.Controllers;           // e.g. ICurrentUserService, IClock (if you placed them here)
+
+// If you placed the minimal impls in the same project but different folders/namespaces,
+// add usings for them as well, e.g.:
+// using WebApplication2.Services.Mfa.InMemory;
+
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
         policy
-          .WithOrigins("http://localhost:5173", "http://localhost:4173", "http://localhost:3000") // <-- your frontend address
+          .WithOrigins(
+            "https://cherishingly-unflippant-marvel.ngrok-free.dev",
+            "http://localhost:5173",
+            "http://localhost:4173",
+            "http://localhost:3000"
+          )
           .AllowAnyHeader()
           .AllowAnyMethod()
-          .AllowCredentials(); // <-- REQUIRED for SignalR cross-origin
+          .AllowCredentials();
     });
 });
 
 builder.Services.AddResponseCaching();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddOptions<GoogleOAuthOptions>()
+    .Bind(builder.Configuration.GetSection("GoogleOAuth"))
+    .Validate(o => !string.IsNullOrWhiteSpace(o.ClientId), "Missing GoogleOAuth:ClientId")
+    .Validate(o => !string.IsNullOrWhiteSpace(o.ClientSecret), "Missing GoogleOAuth:ClientSecret")
+    .ValidateOnStart();
+
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
+
+// Your app services
 builder.Services.AddScoped<ApplicationSettingsService>();
 builder.Services.AddScoped<TranslationService>();
 builder.Services.AddScoped<ModuleService>();
@@ -71,6 +94,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// ===== JWT
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(options =>
 {
@@ -87,19 +111,30 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtConfig["Issuer"],
         ValidAudience = jwtConfig["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!)),
         ClockSkew = TimeSpan.Zero
     };
 });
 
+// ===== NEW: services required by SecurityController (and friends)
+builder.Services.AddSingleton<IClock, SystemClock>();                         // NEW
+builder.Services.AddScoped<ICurrentUserService, HttpContextCurrentUserService>(); // NEW
+builder.Services.AddScoped<IMfaService, InMemoryMfaService>();               // NEW (swap with your real impl later)
+
+// If you use authorization policies, you can add builder.Services.AddAuthorization(); here.
+
 var app = builder.Build();
 
 app.UseResponseCaching();
+
 app.UseSwagger();
 app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
+
 app.UseCors();
 
+// Handle preflight quickly
 app.Use(async (context, next) =>
 {
     if (context.Request.Method == "OPTIONS")
@@ -115,10 +150,11 @@ app.Use(async (context, next) =>
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 
+app.MapControllers();
 app.MapHub<PagesHub>("/pageshub");
 
+// ===== Seed data (unchanged)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -138,129 +174,43 @@ using (var scope = app.Services.CreateScope())
 
     if (!db.Languages.Any())
     {
-        db.Languages.Add(new LanguageSetting
-        {
-            Value = "en-GB",
-            Display_Value = "s:english",
-        });
-
-        db.Languages.Add(new LanguageSetting
-        {
-            Value = "sl",
-            Display_Value = "s:slovenian",
-        });
-
+        db.Languages.Add(new LanguageSetting { Value = "en-GB", Display_Value = "s:english" });
+        db.Languages.Add(new LanguageSetting { Value = "sl", Display_Value = "s:slovenian" });
         db.SaveChanges();
     }
 
     if (!db.DateTimeFormats.Any())
     {
-        db.DateTimeFormats.Add(new DateTimeFormatSetting
-        {
-            Value = "d.MM.yyyy HH:mm:ss",
-            Display_Value = "d.MM.yyyy HH:mm:ss",
-        });
-
-        db.DateTimeFormats.Add(new DateTimeFormatSetting
-        {
-            Value = "dd.MM.yyyy HH:mm:ss",
-            Display_Value = "dd.MM.yyyy HH:mm:ss",
-        });
-
-        db.DateTimeFormats.Add(new DateTimeFormatSetting
-        {
-            Value = "d/MM/yyyy HH:mm:ss",
-            Display_Value = "d/MM/yyyy HH:mm:ss",
-        });
-
-        db.DateTimeFormats.Add(new DateTimeFormatSetting
-        {
-            Value = "dd/MM/yyyy HH:mm:ss",
-            Display_Value = "dd/MM/yyyy HH:mm:ss",
-        });
-
-        db.DateTimeFormats.Add(new DateTimeFormatSetting
-        {
-            Value = "MM/dd/yyyy HH:mm:ss",
-            Display_Value = "MM/dd/yyyy HH:mm:ss",
-        });
-
-        db.DateTimeFormats.Add(new DateTimeFormatSetting
-        {
-            Value = "ddMMM.yyyy HH:mm:ss",
-            Display_Value = "ddMMMyyyy HH:mm:ss",
-        });
+        db.DateTimeFormats.Add(new DateTimeFormatSetting { Value = "d.MM.yyyy HH:mm:ss", Display_Value = "d.MM.yyyy HH:mm:ss" });
+        db.DateTimeFormats.Add(new DateTimeFormatSetting { Value = "dd.MM.yyyy HH:mm:ss", Display_Value = "dd.MM.yyyy HH:mm:ss" });
+        db.DateTimeFormats.Add(new DateTimeFormatSetting { Value = "d/MM/yyyy HH:mm:ss", Display_Value = "d/MM/yyyy HH:mm:ss" });
+        db.DateTimeFormats.Add(new DateTimeFormatSetting { Value = "dd/MM/yyyy HH:mm:ss", Display_Value = "dd/MM/yyyy HH:mm:ss" });
+        db.DateTimeFormats.Add(new DateTimeFormatSetting { Value = "MM/dd/yyyy HH:mm:ss", Display_Value = "MM/dd/yyyy HH:mm:ss" });
+        db.DateTimeFormats.Add(new DateTimeFormatSetting { Value = "ddMMM.yyyy HH:mm:ss", Display_Value = "ddMMMyyyy HH:mm:ss" });
         db.SaveChanges();
     }
 
     if (!db.DecimalSeparators.Any())
     {
-        db.DecimalSeparators.Add(new DecimalSeparatorSetting
-        {
-            Value = ".",
-            Display_Value = "s:dot",
-        });
-
-        db.DecimalSeparators.Add(new DecimalSeparatorSetting
-        {
-            Value = ",",
-            Display_Value = "s:comma",
-        });
-
+        db.DecimalSeparators.Add(new DecimalSeparatorSetting { Value = ".", Display_Value = "s:dot" });
+        db.DecimalSeparators.Add(new DecimalSeparatorSetting { Value = ",", Display_Value = "s:comma" });
         db.SaveChanges();
     }
 
     if (!db.Modules.Any())
     {
-        db.Modules.Add(new ModuleClass
-        {
-            Name = "user-management",
-            Module_Path = "/user-management/remoteEntry.js",
-        });
-
-        db.Modules.Add(new ModuleClass
-        {
-            Name = "role-management",
-            Module_Path = "/role-management/remoteEntry.js",
-        });
-
-        db.Modules.Add(new ModuleClass
-        {
-            Name = "utl",
-            Module_Path = "/utl/remoteEntry.js",
-        });
-
+        db.Modules.Add(new ModuleClass { Name = "user-management", Module_Path = "/user-management/remoteEntry.js" });
+        db.Modules.Add(new ModuleClass { Name = "role-management", Module_Path = "/role-management/remoteEntry.js" });
+        db.Modules.Add(new ModuleClass { Name = "utl", Module_Path = "/utl/remoteEntry.js" });
         db.SaveChanges();
     }
 
     if (!db.NavigationGroups.Any())
     {
-        db.NavigationGroups.Add(new NavigationGroupClass
-        {
-            Name = "s:applicationManagement",
-            Icon = "applicationManagement.svg"
-        });
-
-        db.NavigationGroups.Add(new NavigationGroupClass
-        {
-            Name = "s:usersAndRoles",
-            Icon = "usersAndRoles.svg",
-            ID_parent_group = 1
-        });
-
-        db.NavigationGroups.Add(new NavigationGroupClass
-        {
-            Name = "s:configuration",
-            Icon = "usersAndRoles.svg"
-        });
-
-        db.NavigationGroups.Add(new NavigationGroupClass
-        {
-            Name = "s:general",
-            Icon = "usersAndRoles.svg",
-            ID_parent_group = 3
-        });
-
+        db.NavigationGroups.Add(new NavigationGroupClass { Name = "s:applicationManagement", Icon = "applicationManagement.svg" });
+        db.NavigationGroups.Add(new NavigationGroupClass { Name = "s:usersAndRoles", Icon = "usersAndRoles.svg", ID_parent_group = 1 });
+        db.NavigationGroups.Add(new NavigationGroupClass { Name = "s:configuration", Icon = "usersAndRoles.svg" });
+        db.NavigationGroups.Add(new NavigationGroupClass { Name = "s:general", Icon = "usersAndRoles.svg", ID_parent_group = 3 });
         db.SaveChanges();
     }
 
@@ -327,85 +277,23 @@ using (var scope = app.Services.CreateScope())
             System = true,
             Use_Strong_Password = true
         });
-
         db.SaveChanges();
     }
 
     if (!db.DataSources.Any())
     {
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumSets",
-            Path = "/utl/enumsets",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumValues",
-            Path = "/utl/enumvalues",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumSetsEdit",
-            Path = "/utl/enumsets/edit",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumValuesEdit",
-            Path = "/utl/enumvalues/edit",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlModuleActions",
-            Path = "/utl/module/actions",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlModuleActionForms",
-            Path = "/utl/module/forms",
-            Method = "POST",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlEnumGroupsProd",
-            Path = "/utl/enumgroups/prod",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "utlRecordStatus",
-            Path = "/utl/recordstatus",
-            Method = "GET",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "userModuleActionForms",
-            Path = "/users/forms",
-            Method = "POST",
-        });
-
-        db.DataSources.Add(new DataSourceClass
-        {
-            Name = "coreModuleActionForms",
-            Path = "/utl/forms",
-            Method = "POST",
-        });
-
+        db.DataSources.Add(new DataSourceClass { Name = "utlEnumSets", Path = "/utl/enumsets", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlEnumValues", Path = "/utl/enumvalues", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlEnumSetsEdit", Path = "/utl/enumsets/edit", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlEnumValuesEdit", Path = "/utl/enumvalues/edit", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlModuleActions", Path = "/utl/module/actions", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlModuleActionForms", Path = "/utl/module/forms", Method = "POST" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlEnumGroupsProd", Path = "/utl/enumgroups/prod", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "utlRecordStatus", Path = "/utl/recordstatus", Method = "GET" });
+        db.DataSources.Add(new DataSourceClass { Name = "userModuleActionForms", Path = "/users/forms", Method = "POST" });
+        db.DataSources.Add(new DataSourceClass { Name = "coreModuleActionForms", Path = "/utl/forms", Method = "POST" });
         db.SaveChanges();
     }
-
 }
 
 app.Run();

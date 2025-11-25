@@ -24,8 +24,8 @@ namespace WebApplication2.Business.Roles.Commands.AddRoleCommand
 
             RoleClassEdit roleClass = new RoleClassEdit()
             {
-                Name = request.Data.ExtraParamsFormValues.Name,
-                DefaultPageId = request.Data.ExtraParamsFormValues.DefaultPageId,
+                Name = request.Data.Name,
+                DefaultPageId = request.Data.DefaultPageId,
             };
             var roleId = roleService.AddRole(roleClass);
 
